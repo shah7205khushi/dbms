@@ -1,0 +1,25 @@
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `d2`.`khushi` AS
+    SELECT 
+        `d2`.`person`.`gender` AS `gender`,
+        `d2`.`person`.`age` AS `age`,
+        `d2`.`person`.`marital_status` AS `marital_status`
+    FROM
+        `d2`.`person`
+
+
+
+select * from khushi;
+
+select * from person
+where age >10;
+
+create index k1 on person (age);
+select * from person;
+
+show index from person;
+
+-- ------------------------------------

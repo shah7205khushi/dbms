@@ -1,0 +1,150 @@
+use d4;
+
+create table jobs(
+job_id int,
+min_salary int
+);
+
+
+
+insert into jobs
+values(1,23343);
+
+insert into jobs
+values(2,23443);
+
+insert into jobs
+values(3,3343);
+
+insert into jobs
+values(4,2334);
+
+insert into jobs
+values(5,23346);
+
+select * from jobs;
+
+
+
+alter table jobs
+change min_salary salary int;
+
+call k1();
+
+----------------------------------------------
+
+
+
+
+
+
+create table n1
+(
+rnum double
+);
+
+drop table n1;
+
+select * from n1;
+
+
+
+
+
+call myloop(3);
+select * from n1;
+
+
+
+call myrepeat(6);
+select @sum;
+
+
+
+call mywhile(5);
+select @sum;
+
+
+-------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `k1`()
+BEGIN
+
+declare no_employees int;
+declare  salary int;
+
+
+case
+
+when(salary>10000)
+THEN (select count(job_id) into no_employees from jobs
+ where salary > 10000);
+
+when (salary<10000)
+then (select count(job_id) into no_employees from jobs
+where salary < 10000);
+
+else (select count(job_id)into no_employees from jobs
+ where  salary = 10000);
+
+select count(job_id),salary,no_employees from jobs;
+
+end case;
+
+
+END
+
+--------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `myloop`(in num int)
+BEGIN
+	
+	declare x int;
+    set x=0;
+    loop_label:LOOP
+    
+		insert into n1 values (rand());
+		set  x= x+1;
+		if (x >= num) then
+       
+        leave loop_label;
+    
+    end if;
+end loop;
+END
+
+--------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `myrepeat`(in n int)
+BEGIN
+
+set @sum = 0;
+set @x = 1;
+repeat 
+if mod(@x,2) = 0
+then
+set  @sum=@sum + @x;
+end if;
+set @x = @x + 1;
+until @x>n
+end repeat;
+
+
+END
+
+--------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mywhile`(in n int)
+BEGIN
+
+set @sum = 0;
+set @x = 1;
+while @x < n
+do
+	if mod(@x , 2) <> 0 then
+    set @sum = @sum + @x;
+    end if;
+    set @x = @x + 1;
+    end while;
+
+END

@@ -1,0 +1,107 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `displaydatabase`()
+BEGIN
+select 'SMS database';
+
+END
+------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addemprecord`(e_id varchar(10),e_name varchar(20),designation varchar (20),em_id varchar (20))
+BEGIN
+
+insert into emp
+values(e_id,e_name,designation,em_id);
+
+END
+
+-----------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteemprecord`()
+BEGIN
+
+delete from emp where e_id = 'e1';
+
+END
+
+-------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `displayemp`(out p int)
+BEGIN
+
+select count(*) into p from emp;
+
+END
+
+----------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `square`(inout p int)
+BEGIN
+
+set p =  p*p;
+
+END
+
+---------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `edite_name`()
+BEGIN
+
+update emp 
+set e_name = 'JIL'
+where e_id = 'e2';
+
+END
+
+-----------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `viewemp`(x varchar(10))
+BEGIN
+
+declare emp_name varchar(20);
+declare e_designation varchar(20);
+
+select e_name,designation into emp_name,e_designation
+from emp where e_id = x;
+
+select emp_name,e_designation;
+
+END
+
+----------------------------------------
+
+call displaydatabase();
+
+
+
+create table emp(
+e_id varchar(10),
+e_name varchar(20),
+designation varchar(20),
+emid varchar(10)
+);
+
+
+call addemprecord('e1','khushi','manager','em1');
+call addemprecord('e2','khush','bussinessman','em2');
+call addemprecord('e3','khushali','banker','em3');
+call addemprecord('e4','khushbu','tailor','em4');
+call addemprecord('e5','khushvi','scintist','em5');
+
+select * from emp;
+
+call deleteemprecord();
+
+call displayemp(@noofemp);
+select @noofemp;
+
+
+set @inumber = 10;
+call square(@inumber);
+select @inumber;
+
+call edite_name();
+
+call viewemp('e3');
+
+drop procedure displaydatabase;
+
+---------------------------------------------------------------------------------

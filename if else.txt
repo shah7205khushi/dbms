@@ -1,0 +1,37 @@
+create table user1
+(
+name1 varchar(16),
+user_id varchar(16)
+);
+
+call getusername(@a,'diana094');
+select @a;
+
+
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getusername`(inout username varchar (16), in userid varchar(16))
+BEGIN
+
+declare uname varchar(16);
+
+select name1 into uname
+ from user1
+ where user_id=userid;
+
+IF userid = "scott123"
+ Then 
+set username= "scott";
+
+ELSEIF userid="ferp6734"
+Then
+set username = "palash";
+
+ELSEIF userid="diana094"
+Then
+set username="diana";
+
+END IF;
+ 
+END

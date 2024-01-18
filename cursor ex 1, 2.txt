@@ -1,0 +1,106 @@
+create database db1;
+use db1;
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    DateOfBirth DATE,
+    Department VARCHAR(50),
+    Position VARCHAR(50),
+    Salary DECIMAL(10, 2),
+    HireDate DATE
+);
+-- Inserting data into the Employees table
+INSERT INTO Employees (EmployeeID, FirstName, LastName, DateOfBirth, Department, Position, Salary, HireDate)
+VALUES
+    (1, 'John', 'Smith', '1980-05-15', 'Sales', 'Sales Manager', 70000.00, '2010-03-20'),
+    (2, 'Jane', 'Doe', '1985-12-10', 'HR', 'HR Manager', 75000.00, '2012-07-15'),
+    (3, 'David', 'Johnson', '1990-08-25', 'Marketing', 'Marketing Specialist', 60000.00, '2015-02-10'),
+    (4, 'Sarah', 'Brown', '1982-04-30', 'IT', 'IT Manager', 80000.00, '2013-06-05'),
+    -- Add more rows as needed
+    (5, 'Michael', 'Wilson', '1988-09-03', 'Finance', 'Financial Analyst', 65000.00, '2014-08-12'),
+    (6, 'Emily', 'Davis', '1993-07-21', 'Sales', 'Sales Representative', 55000.00, '2018-04-02'),
+    (7, 'James', 'Anderson', '1987-03-17', 'HR', 'HR Specialist', 60000.00, '2016-09-28'),
+    (8, 'Linda', 'Martinez', '1991-11-05', 'Marketing', 'Marketing Coordinator', 48000.00, '2017-12-15'),
+    (9, 'William', 'White', '1983-06-28', 'IT', 'Software Engineer', 75000.00, '2011-11-08'),
+    (10, 'Susan', 'Lee', '1986-02-14', 'Finance', 'Financial Manager', 90000.00, '2009-05-23'),
+    (11, 'Robert', 'Taylor', '1984-10-12', 'Sales', 'Sales Representative', 58000.00, '2019-03-17');
+
+SELECT *FROM Employees;
+
+call get_customer_details(5);
+-- output :
+# l_contact_surname, l_contact_firstname
+-- Wilson, Michael
+
+-- _____________________________________________________________________________________
+
+-- que : 1
+-- create cursor
+call cursor_ex_1();
+
+call cursor_ex_2_repeat_until_loop();
+
+_____________________________________________________________________________________
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_customer_details`(in e_ID INT)
+BEGIN
+
+DECLARE l_contact_surname VARCHAR(30);
+DECLARE l_contact_firstname VARCHAR(30); 
+
+SELECT LastName,FirstName
+INTO l_contact_surname,l_contact_firstname
+FROM Employees
+WHERE EmployeeID= e_ID;
+/* Do something with the customer record */
+
+SELECT l_contact_surname,l_contact_firstname
+FROM Employees
+WHERE  EmployeeID= e_ID;
+END
+_____________________________________________________________________________________
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cursor_ex_1`()
+BEGIN
+declare new_EmployeeID int;
+declare new_name varchar(50);
+declare new_salary DECIMAL(10, 2);
+declare done int default 0;
+
+declare c1 cursor for select  EmployeeID, FirstName, Salary from Employees;
+declare continue handler for not found set done=1; 
+
+open c1;
+	loop1 : loop 
+		IF done=1 THEN
+		LEAVE loop1;
+        end if;
+    fetch c1 into new_EmployeeID,new_name,new_salary ;
+       select new_EmployeeID,new_name,new_salary as new_EmployeeID,new_name,new_salary;
+    end loop loop1;
+    
+ close c1;
+END
+_____________________________________________________________________________________
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cursor_ex_2_repeat_until_loop`()
+BEGIN
+    DECLARE new_EmployeeID INT;
+    DECLARE new_name VARCHAR(50);
+    DECLARE new_salary DECIMAL(10, 2);
+    DECLARE done INT DEFAULT 0;
+
+    DECLARE c CURSOR FOR SELECT EmployeeID, FirstName, Salary FROM Employees;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    SET done = 0;
+    OPEN c;
+
+    REPEAT
+        FETCH c INTO new_EmployeeID, new_name, new_salary;
+    UNTIL done END REPEAT;
+ select new_EmployeeID,new_name,new_salary as new_EmployeeID,new_name,new_salary;
+    CLOSE c;
+    SET done = 0;
+END
+_____________________________________________________________________________________

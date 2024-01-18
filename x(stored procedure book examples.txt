@@ -1,0 +1,401 @@
+example 3.1 to 3.14 from stored procedure book (pg no 50 to 68)
+
+-------------------------------------------------------------------
+
+
+create database d1;
+use d1;
+
+create table student(
+id int,
+s_name varchar(20),
+age int
+);
+
+call k(1,'khushi',56);
+call k(2,'jil',8);
+call k(3,'kavya',15);
+call k(4,'khush',96);
+call k(5,'zeel',81);
+call k(6,'keya',55);
+
+select * from student;
+
+call k();
+
+-- ----------------------------------------------------------------------------
+
+
+
+
+create table emp(
+emp_id int,
+e_name text,
+age int,
+salary int
+);
+
+call addemp(1,'khushi',12,3456);
+call addemp(2,'khush',92,3400);
+call addemp(3,'khushbu',82,9856);
+call addemp(4,'khushvi',19,98000);
+call addemp(5,'khushali',78,5456);
+
+select * from emp;
+
+update emp
+set age=23
+where emp_id=1;
+
+
+call emp_count();
+
+-- ------------------------------------------------------
+
+call local_variables(); -- 2 outputs are coming
+
+call user_variables();
+
+SET @p=7;
+call in_parameter(@p);  -- 2 outputs are coming
+select @p;
+
+
+set @a=5;
+call out_parameter(@a); -- 2 outputs are coming
+select @a;
+
+
+SET @b=5;
+call inout_parameter(@b);   -- 2 outputs are coming
+select @b;
+
+SELECT 'Hello World' into @x ;
+select @x;
+
+SET @y='Goodbye Cruel World';
+select @y;
+
+SET @z=1+2+3;
+select @z;
+
+call greetworld();
+
+call p1();
+call p2();
+
+call opereator(); -- 5 output are coming
+
+
+
+---------------------------------------------------------------------------------------------------------------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addemp`(emp_id int,e_name text,age int,salary int)
+BEGIN
+
+insert into emp values(emp_id,e_name,age,salary);
+
+END
+
+
+
+------------------------------------------------------------------------------------------------------------------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `emp_count`()
+BEGIN
+
+-- declare i_emp_count integer;
+
+/*
+select count(*)
+into i_emp_count
+from emp
+where age>20;
+
+select i_emp_count;
+*/
+
+/*
+update emp
+set age=25
+where e_name like 'khushbu';*/
+
+-- select concat('emp whose age is greater than 20 =  ',i_emp_count);
+
+UPDATE emp
+SET age = REPLACE (age, '19', '76');
+
+
+END
+
+----------------------------------------------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `greetworld`()
+BEGIN
+
+ select concat(@greeting ,'  world');
+ SET @greeting='Hello';
+
+
+END
+
+-----------------------------------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `in_parameter`(in p int)
+BEGIN
+
+select p;
+
+set p=2;
+
+select p;
+
+END
+
+-------------------------------------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `inout_parameter`(inout b int)
+BEGIN
+
+select b;
+SET b=12;
+ SELECT b;
+
+END
+
+-------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `k`(id int,s_name varchar(20),age int)
+BEGIN
+
+insert into student values(id,s_name,age);
+
+-- select 'hello world';
+
+END
+
+----------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `local_variables`()
+BEGIN
+
+declare a int default 10 ;
+declare b,c int;
+ 
+set a=a+100;
+ set b=2;
+ set c= a+b;
+ 
+ begin
+ 
+ declare c int;
+ set c=5;
+ 
+ select a,b,c;
+ 
+ end;
+ select a,b,c;
+END
+
+------------------------------------------------------------------------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `opereator`()
+BEGIN
+
+DECLARE a int default 2;
+DECLARE b int default 3;
+DECLARE c FLOAT;
+
+
+SET c=a+b;
+ select 'a+b=',c;
+ 
+ SET c=a/b; 
+ select 'a/b=',c;
+ 
+ SET c=a*b;
+ Select 'a*b=',c;
+
+
+IF (a<b) THEN
+SELECT 'a is less than b';
+ END IF;
+ 
+ IF NOT (a=b) THEN
+ SELECT 'a is not equal to b';
+ END IF;
+ 
+END
+
+
+-----------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `opretor`()
+BEGIN
+
+DECLARE a int default 2;
+DECLARE b int default 3;
+DECLARE c FLOAT;
+
+
+SET c=a+b;
+ select 'a+b=',c;
+ 
+ SET c=a/b; 
+ select 'a/b=',c;
+ 
+ SET c=a*b;
+ Select 'a*b=',c;
+
+
+END
+
+------------------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `out_parameter`(out a int)
+BEGIN
+
+select a;
+-- set a=2;
+-- select a;
+
+END
+
+---------------------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `p1`()
+BEGIN
+
+ SET @last_procedure='p1';
+
+END
+
+------------------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `p2`()
+BEGIN
+
+SELECT CONCAT('Last procedure was ',@last_procedure);
+
+END
+
+-----------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `user_variables`()
+BEGIN
+
+set @x=15;
+set @y=10;
+select @x,@y,@x-@y;
+
+END
+
+---------------------------------------------------------------------------------------
+create database d;
+use d;
+
+create table person(
+gender CHAR(1),
+age INT,
+marital_status VARCHAR(7)
+);
+
+insert into person(gender,age,marital_status)
+values('F',87,'Married');
+
+insert into person(gender,age,marital_status)
+values('M',17,'Married');
+
+insert into person(gender,age,marital_status)
+values('F',13,'Single');
+
+insert into person(gender,age,marital_status)
+values('M',77,'Married');
+
+insert into person(gender,age,marital_status)
+values('F',22,'Single');
+
+select * from person;
+
+ select gender,age,Marital_status,f_title(gender ,age ,marital_status) from person;
+
+
+
+
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `f_title`(gender CHAR(1),age INT,marital_status VARCHAR(7)) RETURNS varchar(6) CHARSET utf8mb4
+    DETERMINISTIC
+BEGIN
+
+DECLARE title VARCHAR(6);
+ 
+ IF gender='F' AND age<16 THEN
+ SET title='Miss';
+ ELSEIF gender='F' AND age>=16 AND marital_status='Married' THEN
+ SET title='Mrs';
+ ELSEIF gender='F' AND age>=16 AND marital_status='Single' THEN
+ SET title='Ms';
+ ELSEIF gender='M' AND age<16 THEN
+ SET title='Master';
+ ELSEIF gender='M' AND age>=16 THEN
+ SET title='Mr';
+ END IF;
+ RETURN(title);
+
+END
+
+-----------------------------------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `fun`()
+BEGIN
+
+ DECLARE a int default 2;
+DECLARE b int default 3;
+DECLARE c double;
+
+ SET c=SUM(a); 
+
+
+END
+
+
+
+
+create database d;
+use d;
+
+
+ select @c;
+ ----------------------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `function_example`()
+BEGIN
+
+ DECLARE x DATE;
+ DECLARE mystr VARCHAR(250);
+ SET x=date_sub(curdate( ), interval 20 year);
+ SET mystr=concat('It was ',x,' Sgt Pepper taught the band to play...');
+ SELECT mystr;
+ IF (CAST(SUBSTR(version( ),1,3) AS DECIMAL(2,1)) <5.0) THEN
+ SELECT 'MySQL versions earlier than 5.0 cannot run stored programs - you must be hallucinating';
+ ELSE
+ SELECT 'Thank goodness you are running 5.0 or higher!';
+ END IF;
+
+END
+
+
+
+call function_example();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
