@@ -1,0 +1,39 @@
+/*
+7) WAT which generate an error if any user try to delete from product_master table on
+weekends (i.e. Saturday and Sunday).
+*/
+
+CREATE TABLE product_master (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(255),
+    price DECIMAL(10, 2),
+    creation_date DATE
+);
+
+INSERT INTO product_master (product_id, product_name, price, creation_date) VALUES
+(1, 'Product A', 29.99, '2022-01-15'),
+(2, 'Product B', 39.99, '2022-02-20'),
+(3, 'Product C', 49.99, '2022-03-25'),
+(4, 'Product D', 59.99, '2022-04-30');
+
+-- Example delete statement
+DELETE FROM product_master WHERE product_id = 1;
+
+-- output
+
+/*
+0	209	19:56:59	DELETE FROM product_master WHERE product_id = 1	
+Error Code: 1644. Error: Deletion not allowed on weekends	0.000 sec
+*/
+
+
+
+--------------
+
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `Before_Delete_Product_Master` BEFORE DELETE ON `product_master` FOR EACH ROW BEGIN
+    IF DAYOFWEEK(NOW()) IN (1, 7) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Deletion not allowed on weekends';
+    END IF;
+END

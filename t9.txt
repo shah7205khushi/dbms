@@ -1,0 +1,43 @@
+CREATE TABLE EMP (
+    emp_no INT PRIMARY KEY,
+    emp_name VARCHAR(255),
+    emp_income DECIMAL(10, 2),
+    income_tax DECIMAL(10, 2)
+);
+
+INSERT INTO EMP (emp_no, emp_name, emp_income) VALUES (1, 'John', 80000);
+INSERT INTO EMP (emp_no, emp_name, emp_income) VALUES (2, 'John', 800000);
+INSERT INTO EMP (emp_no, emp_name, emp_income) VALUES (3, 'John', 200000);
+INSERT INTO EMP (emp_no, emp_name, emp_income) VALUES (4, 'John', 30000);
+INSERT INTO EMP (emp_no, emp_name, emp_income) VALUES (5, 'John', 40000);
+
+select * from emp;
+
+
+
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `CalculateIncomeTaxTrigger` BEFORE INSERT ON `emp` FOR EACH ROW BEGIN
+    -- Calculate income tax based on income ranges
+    SET NEW.income_tax = CASE
+        WHEN NEW.emp_income < 50000 THEN 0
+        WHEN NEW.emp_income >= 50000 AND NEW.emp_income < 100000 THEN NEW.emp_income * 0.10
+        WHEN NEW.emp_income >= 100000 AND NEW.emp_income < 200000 THEN NEW.emp_income * 0.15
+        WHEN NEW.emp_income >= 200000 AND NEW.emp_income < 300000 THEN NEW.emp_income * 0.20
+        ELSE NEW.emp_income * 0.25 -- Default tax rate for income >= 300000
+    END;
+END
+
+
+
+
+
+
+
+output
+
+1	John	80000.00	8000.00
+2	John	800000.00	200000.00
+3	John	200000.00	40000.00
+4	John	30000.00	0.00
+5	John	40000.00	0.00
+			

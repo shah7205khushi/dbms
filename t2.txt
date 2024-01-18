@@ -1,0 +1,69 @@
+2) Write a trigger, that ensures the empno of emp table is in a format ‘E00001’ (empno
+must start with ‘E’ and must be 6 characters long). If not than complete empno with this
+format before inserting into the employee table.
+
+--------------------------------------------------- 
+
+
+CREATE TABLE EP (
+    Empno VARCHAR(6) PRIMARY KEY,
+    Empname VARCHAR(255),
+    DOJ DATE
+);
+
+drop table ep;
+
+
+INSERT INTO EP (Empno, Empname, DOJ) VALUES
+('E00001', 'John Doe', '2022-01-01'),
+('002', 'Jane Smith', '2021-05-15'),
+('E00003', 'Bob Johnson', '2021-08-10'),
+('E004', 'Alice Williams', '2023-03-03');
+
+ 
+-- Example insert statement
+INSERT INTO EP (Empno, Empname, DOJ) VALUES ('8', 'John Doe', '2022-01-01');
+ 
+CREATE TABLE EPp (
+    Empno VARCHAR(6) PRIMARY KEY,
+    Empname VARCHAR(255),
+    DOJ DATE
+); 
+
+select * from epp;
+
+INSERT INTO EPp (Empno, Empname, DOJ) VALUES ('1', 'John Doe', '2022-01-01');
+INSERT INTO EPp (Empno, Empname, DOJ) VALUES ('2', 'John Doe', '2022-01-01');
+INSERT INTO EPp (Empno, Empname, DOJ) VALUES ('3', 'John Doe', '2022-01-01');
+INSERT INTO EPp (Empno, Empname, DOJ) VALUES ('4', 'John Doe', '2022-01-01');
+INSERT INTO EPp (Empno, Empname, DOJ) VALUES ('5', 'John Doe', '2022-01-01');
+INSERT INTO EPp (Empno, Empname, DOJ) VALUES ('6', 'John Doe', '2022-01-01');
+INSERT INTO EPp (Empno, Empname, DOJ) VALUES ('7', 'John Doe', '2022-01-01');
+INSERT INTO EPp (Empno, Empname, DOJ) VALUES ('8', 'John Doe', '2022-01-01');
+
+
+
+output
+
+
+E00001	John Doe	2022-01-01
+E00002	John Doe	2022-01-01
+E00003	John Doe	2022-01-01
+E00004	John Doe	2022-01-01
+E00005	John Doe	2022-01-01
+E00006	John Doe	2022-01-01
+E00007	John Doe	2022-01-01
+E00008	John Doe	2022-01-01
+		
+
+
+-----------------
+
+trigger
+
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `epp_BEFORE_INSERT` BEFORE INSERT ON `epp` FOR EACH ROW BEGIN
+
+SET NEW.Empno = CONCAT('E', LPAD(NEW.Empno, 5, '0'));
+
+END

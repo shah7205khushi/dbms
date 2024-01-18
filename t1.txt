@@ -1,0 +1,78 @@
+-- triggers
+
+/* 1)	 Write a Trigger that stores the old data table of student table in student_backup while
+updating the student table.
+Student_backup (Stud_ID, Stud_name, Address, Contact_no, Branch, Operation_date)
+Student (Stud_ID, Stud_name, Address, Contact_no, Branch)   */
+
+CREATE TABLE Stu (
+    Stud_ID INT PRIMARY KEY,
+    Stud_name VARCHAR(255),
+    Address VARCHAR(255),
+    Contact_no VARCHAR(15),
+    Branch VARCHAR(50)
+);
+
+drop table student;
+INSERT INTO Stu (Stud_ID, Stud_name, Address, Contact_no, Branch)
+VALUES
+(1, 'John Doe', '123 Main Street', '555-1234', 'Engineering'),
+(2, 'Jane Smith', '456 Elm Street', '555-5678', 'Science'),
+(3, 'Bob Johnson', '789 Oak Street', '555-9876', 'Arts');
+
+select * from stu;
+select * from stu_backup;
+
+CREATE TABLE Stu_backup (
+    Stud_ID INT,
+    Stud_name VARCHAR(255),
+    Address VARCHAR(255),
+    Contact_no VARCHAR(15),
+    Branch VARCHAR(50),
+    Operation_date TIMESTAMP
+);
+
+
+
+UPDATE Stu
+SET Contact_no = '555-9999'
+WHERE Stud_ID = 2;
+
+SELECT * FROM Stu;
+
+
+
+SELECT * FROM Stu_backup;
+
+
+---------------------
+
+
+before update trigger
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `stu_BEFORE_UPDATE` BEFORE UPDATE ON `stu` FOR EACH ROW BEGIN
+
+INSERT INTO Stu_backup (Stud_ID, Stud_name, Address, Contact_no, Branch, Operation_date)
+    VALUES (OLD.Stud_ID, OLD.Stud_name, OLD.Address, OLD.Contact_no, OLD.Branch, NOW());
+
+
+END
+
+----------------------------------------------
+
+
+-- output
+
+/*
+
+1	John Doe	123 Main Street	555-1234	Engineering
+2	Jane Smith	456 Elm Street	555-9999	Science
+3	Bob Johnson	789 Oak Street	555-9876	Arts
+
+*/				
+                
+
+
+SELECT * FROM Stu_backup;
+
+-- 2	Jane Smith	456 Elm Street	555-5678	Science	2023-12-23 10:41:22

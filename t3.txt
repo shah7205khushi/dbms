@@ -1,0 +1,59 @@
+
+ /* 3) Write a trigger which checks the age of employee while inserting the record in emp
+table. If it is negative than generate the error and display proper message. */
+
+
+CREATE TABLE empp (
+    Emp_ID INT PRIMARY KEY,
+    Emp_name VARCHAR(255),
+    Age INT
+);
+
+INSERT INTO empp (Emp_ID, Emp_name, Age)
+VALUES
+(1, 'John Doe', 30),
+(2, 'Jane Smith', 25),
+(3, 'Bob Johnson', 5); 
+
+INSERT INTO empp (Emp_ID, Emp_name, Age)
+VALUES (4, 'Alice Johnson', 28);
+
+INSERT INTO empp (Emp_ID, Emp_name, Age)
+VALUES (5, 'Negative Age Employee', -5);
+
+INSERT INTO empp (Emp_ID, Emp_name, Age)
+VALUES (6, 'Negyee', -5);
+
+INSERT INTO empp (Emp_ID, Emp_name, Age)
+VALUES (7, ' Emp', 5);
+
+SELECT * FROM empp;
+
+-- output
+
+/*
+
+1	John Doe	30
+2	Jane Smith	25
+3	Bob Johnson	5
+4	Alice Johnson	28
+7	 Emp	5
+
+
+0	108	16:47:58	INSERT INTO empp (Emp_ID, Emp_name, Age)                       
+ VALUES (6, 'Negyee', -5)	Error Code: 1644. Age cannot be negative	0.000 sec */
+ 
+ ------------------------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `empp_BEFORE_INSERT` BEFORE INSERT ON `empp` FOR EACH ROW BEGIN
+
+
+ IF NEW.Age < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Age cannot be negative';
+    END IF;
+
+
+
+
+END

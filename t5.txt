@@ -1,0 +1,111 @@
+/*  5) WAT that stores the data of emp table in emp_backup table for every delete operation
+and store the old data for every update operation.
+EMP(Empno, Empname, salary);
+Emp_Backup(Empno,Empname,Date_of_operation,Type_of_operation(i.e.update or
+delete));  */
+
+
+
+
+CREATE TABLE emppss (
+    Empno INT PRIMARY KEY,
+    Empname VARCHAR(255),
+    Salary DECIMAL(10, 2)
+);
+
+-- Create the emp_backup table
+CREATE TABLE emps_backup (
+    Empno INT,
+    Empname VARCHAR(255),
+    salary  int,
+    Date_of_operation TIMESTAMP,
+    Type_of_operation ENUM('update', 'delete')
+);
+
+
+INSERT INTO emppss (Empno, Empname, Salary)
+VALUES
+(1, 'John Doe', 50000.00),
+(2, 'Jane Smith', 60000.00),
+(3, 'Bob Johnson', 75000.00),
+(4, 'Bob Johnson', 75000.00),
+(5, 'Bob Johnson', 75000.00),
+(6, 'Bob Johnson', 75000.00);
+
+
+SELECT * FROM emppss;
+select * from emps_backup;
+
+
+-- Delete an employee with Empno 2 (and store the old data in emp_backup)
+DELETE FROM emppss WHERE Empno = 5;
+
+-- Update the salary for an employee (and store the old data in emp_backup)
+UPDATE emppss
+SET Salary = 79000.00
+WHERE Empno = 3;
+
+-- Delete an employee with Empno 2 (and store the old data in emp_backup)
+DELETE FROM emppss WHERE Empno = 4;
+
+-- Update the salary for an employee (and store the old data in emp_backup)
+UPDATE emppss
+SET Salary = 7300.00
+WHERE Empno = 6;
+
+SELECT * FROM emps_backup;
+
+drop table emppss;
+drop table emps_backup;
+
+ 
+
+
+/* 
+
+output 
+
+main table
+
+2	Jane Smith	60000.00
+3	Bob Johnson	75000.00
+4	Bob Johnson	75000.00
+5	Bob Johnson	75000.00
+6	Bob Johnson	75000.00
+		
+after delete and update operation 
+
+main table
+
+2	Jane Smith	60000.00
+3	Bob Johnson	79000.00
+6	Bob Johnson	7300.00
+		
+backup table     
+
+5	Bob Johnson				2023-12-23	 18:36:29	delete
+3	Bob Johnson		75000		2023-12-23 	 18:36:36	update
+4	Bob Johnson				2023-12-23 	 18:37:24	delete
+6	Bob Johnson		75000		2023-12-23 	 18:37:42	update   
+*/
+
+
+----------------------------------------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `emppss_BEFORE_DELETE` BEFORE DELETE ON `emppss` FOR EACH ROW BEGIN
+
+INSERT INTO emps_backup (Empno, Empname, Date_of_operation, Type_of_operation)
+    VALUES (OLD.Empno, OLD.Empname, NOW(), 'delete');
+
+END
+
+
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `emppss_BEFORE_UPDATE` BEFORE UPDATE ON `emppss` FOR EACH ROW BEGIN
+
+INSERT INTO emps_backup (Empno, Empname,salary, Date_of_operation, Type_of_operation)
+    VALUES (OLD.Empno, OLD.Empname,old.salary, NOW(), 'update');
+
+
+END
+

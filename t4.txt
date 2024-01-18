@@ -1,0 +1,40 @@
+/*
+4) Write a trigger which converts the employee name in upper case if it is inserted in any
+other case. Change should be done before the insertion only.*/
+		
+CREATE TABLE EMPl (
+    Empno VARCHAR(6) PRIMARY KEY,
+    Empname VARCHAR(255),
+    DOJ DATE
+);
+
+
+
+INSERT INTO EMPl (Empno, Empname, DOJ) VALUES
+('E00001', 'John Doe', '2022-01-01'),
+('E00002', 'Jane Smith', '2021-05-15'),
+('E00003', 'Bob Johnson', '2021-08-10'),
+('E00004', 'Alice Williams', '2023-03-03');
+
+select * from empl;
+
+-- output
+
+/*
+
+E00001	JOHN DOE	2022-01-01
+E00002	JANE SMITH	2021-05-15
+E00003	BOB JOHNSON	2021-08-10
+E00004	ALICE WILLIAMS	2023-03-03
+		
+*/        
+
+
+
+-------------
+
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `Before_Insert_Emp` BEFORE INSERT ON `empl` FOR EACH ROW BEGIN
+    SET NEW.Empname = UPPER(NEW.Empname);
+    -- SET NEW.Empno = CONCAT('E', LPAD(NEW.Empno, 5, '0'));
+END
