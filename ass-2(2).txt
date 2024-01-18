@@ -1,0 +1,69 @@
+2) WAP to input rollno and three subject marks. Find out total, percentage, result and
+grade for the student from the entered data.
+
+
+create database ass2;
+use ass2;
+
+
+CREATE TABLE student_marks (
+    rollno INT PRIMARY KEY,
+    subject1 INT,
+    subject2 INT,
+    subject3 INT
+);
+
+INSERT INTO student_marks (rollno, subject1, subject2, subject3)
+VALUES
+    (1, 85, 92, 78),
+    (2, 65, 70, 75),
+    (3, 40, 50, 35),
+    (4, 70, 60, 55),
+    (5, 95, 88, 92);
+    
+    
+    
+CALL CalculateStudentResult(1, @p_total, @percentage, @result, @grade);
+
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CalculateStudentResult`(
+    IN p_rollno INT,
+    OUT p_total INT,
+    OUT p_percentage DECIMAL(5,2),
+    OUT p_result VARCHAR(10),
+    OUT p_grade CHAR(1)
+)
+BEGIN
+    DECLARE v_subject1 INT;
+    DECLARE v_subject2 INT;
+    DECLARE v_subject3 INT;
+    
+    SELECT subject1, subject2, subject3 INTO v_subject1, v_subject2, v_subject3 
+    FROM student_marks
+    WHERE rollno = p_rollno;
+    
+    SET p_total = v_subject1 + v_subject2 + v_subject3;
+    SET p_percentage = (p_total / 300) * 100;
+    
+    IF p_percentage >= 40 AND v_subject1 >= 33 AND v_subject2 >= 33 AND v_subject3 >= 33 THEN
+        SET p_result = 'Pass';
+    ELSE
+        SET p_result = 'Fail';
+    END IF;
+    
+    IF p_percentage >= 90 THEN
+        SET p_grade = 'A';
+    ELSEIF p_percentage >= 80 THEN
+        SET p_grade = 'B';
+    ELSEIF p_percentage >= 70 THEN
+        SET p_grade = 'C';
+    ELSEIF p_percentage >= 60 THEN
+        SET p_grade = 'D';
+    ELSE
+        SET p_grade = 'F';
+    END IF;
+    
+    select p_total,p_percentage,p_result,p_grade ;
+END

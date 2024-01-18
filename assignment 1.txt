@@ -1,0 +1,320 @@
+/*
+
+1. Write a PL/SQL block that selects the maximum department number in the department table
+and store it in a SQL*PLUS variable. And print the results to screen.
+2. Create a PL/SQL block to insert a new department number into the Departments table. Use
+maximum dept number fetched from above and adds 10 to it. Use SQL*PLUS substitution
+variable for department name. Leave the location AS null.
+3. Create a PL/SQL block to update the location for an existing department. Use substitution
+variable for dept no. and dept location.
+4. Create a PL/SQL Block to delete the department created in exercise 2. Print to the screen
+the number of rows affected.
+
+*/
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+
+create database assignment;
+use assignment;
+
+create table dept
+(
+dept_id int,
+dept_name varchar(20),
+location varchar(50)
+);
+
+insert into dept(dept_id,dept_name)
+values (1 ,'gujarat university');
+
+insert into dept(dept_id,dept_name)
+values (2 ,'RCC');
+
+insert into dept(dept_id,dept_name)
+values (3 ,'GLS');
+
+insert into dept(dept_id,dept_name)
+values (4 ,'LJ');
+
+insert into dept(dept_id,dept_name)
+values (5,'Animation');
+
+
+
+call GetMaxDeptNumber();
+
+
+
+call InsertNewDepartment(6,'JG university');
+select * from dept;
+
+delete from dept where dept_id is null;
+
+set @dept_id = 7;
+set @dept_name = 'HL';
+call InsertNewDepartment(@dept_id , @dept_name);
+
+
+set @dept_id = 3;
+set @location = 'navrangpura';
+call Update_Dept_Location(@dept_id , @location );
+select * from dept;
+
+call dd(3 , @rows_affected);
+
+
+
+-------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Get_Max_Dept_num`()
+BEGIN
+
+    DECLARE  SQL_PLUS INT;
+
+   
+    SELECT MAX(dept_id) INTO SQL_PLUS FROM Dept;
+    
+     SELECT CONCAT('Maximum Department Number: ',SQL_PLUS );
+
+
+SET SQL_PLUS = SQL_PLUS + 10;
+    
+    SELECT CONCAT('Maximum Department Number: ',SQL_PLUS );
+
+
+END
+
+
+
+
+
+call GetMaxDeptNumber();
+
+
+----------------------------------------------------------------------------------
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insert_New_Dept`(In dept_id int ,IN dept_name VARCHAR(20))
+BEGIN
+
+
+INSERT INTO dept (dept_id, dept_name, location)
+ VALUES (dept_id, dept_name, NULL);
+
+END
+
+
+
+
+
+
+call InsertNewDepartment(6,'JG university');
+select * from dept;
+
+delete from dept where dept_id is null;
+
+set @dept_id = 7;
+set @dept_name = 'HL';
+call InsertNewDepartment(@dept_id , @dept_name);
+
+
+------------------------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Update_Dept_Location`(IN deptid INT, IN d_location VARCHAR(50))
+BEGIN
+
+
+
+
+
+    UPDATE Dept
+    SET location = d_location
+    WHERE  dept_id= deptid;
+
+
+
+END
+
+
+
+
+
+
+set @dept_id = 3;
+set @location = 'navrangpura';
+call Update_Dept_Location(@dept_id , @location );
+select * from dept;
+
+-----------------------------------------------------------------------------------
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `dd`(IN dept_number INT, OUT rows_affected INT)
+BEGIN
+
+ DELETE FROM Dept 
+    WHERE dept_id = dept_number;
+    SET rows_affected = ROW_COUNT();
+    
+    select * from dept;
+    
+    SELECT CONCAT('Number of rows affected: ', rows_affected);
+    
+END
+
+
+
+
+call dd(3 , @rows_affected);
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------
+
+5) Write a PL/SQL block which accepts employee name, basic and should display
+Employee name, PF and net salary.
+HRA=31% of basic salary
+DA=15% of basic salary
+Net salary=basic+HRA+DA-PF
+If the basic is less than 3000 PF is 5% of basic salary.
+If the basic is between 3000 and 5000 PF is 7% of basic salary.
+If the basic is between 5000 and 8000 PF is 8% of basic salary.
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Calculate_Salary`(In basic_salary int , IN emp_name varchar(40))
+BEGIN
+
+	
+    DECLARE hra DECIMAL(10, 2);
+    DECLARE da DECIMAL(10, 2);
+    DECLARE pf DECIMAL(10, 2);
+    DECLARE net_salary DECIMAL(10, 2);
+    
+	SET hra = basic_salary * 0.31;
+
+	SET da = basic_salary * 0.15;
+
+    IF  basic_salary< 3000 THEN
+        SET pf =  basic_salary * 0.05;
+        
+        
+    ELSEIF  basic_salary BETWEEN 3000 AND 5000 THEN
+        SET pf =  basic_salary * 0.07;
+        
+        
+    ELSEIF  basic_salary BETWEEN 5000 AND 8000 THEN
+        SET pf = basic_salary * 0.08;
+        
+        
+    ELSE
+        SET pf = 0;
+
+    END IF;
+
+
+ SET net_salary =  basic_salary + hra + da - pf;
+
+
+    SELECT CONCAT('Employee Name: ', emp_name) as emp_name;
+	SELECT CONCAT('HRA: ', hra) as hra;
+	SELECT CONCAT('DA: ', da) as da;
+    SELECT CONCAT('PF: ', pf) as pf;
+    SELECT CONCAT('Net Salary: ', net_salary)as net_salary;
+
+
+
+END
+
+
+
+
+
+call Calculate_Salary(5000,'khushi');
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+6. Write a PL/SQL block to find the salary grade of the specified employee.
+If grade is 1 display ‘the employee is junior engineer’
+If grade is 2 display ‘the employee is engineer’
+If grade is 3 display ‘the employee is lead engineer’
+If grade is 4 display ‘the employee is Manager’
+If grade is 5 display ‘the employee is Project manager’
+(Use case expression)
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+create table employee
+(
+e_id int,
+salary_grade int
+);
+
+INSERT INTO employee (e_id, salary_grade)
+VALUES
+    (1, 5 ),
+    (2, 4),
+    (3, 3),
+    (4, 4),
+    (5, 2);
+    
+    select * from employee;
+    
+    
+call  grade(4);
+
+
+
+
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `grade`(IN emp_id INT)
+BEGIN
+
+	DECLARE emp_grade INT;
+    DECLARE emp_title VARCHAR(220);
+
+    SELECT salary_grade INTO emp_grade
+    FROM employee
+    WHERE e_id = emp_id;
+
+
+    CASE emp_grade
+        WHEN 1 THEN
+            SET emp_title = 'the employee is junior engineer';
+        WHEN 2 THEN
+            SET emp_title = 'the employee is engineer';
+        WHEN 3 THEN
+            SET emp_title = 'the employee is lead engineer';
+        WHEN 4 THEN
+            SET emp_title = 'the employee is Manager';
+        WHEN 5 THEN
+            SET emp_title = 'the employee is Project manager';
+        ELSE
+            SET emp_title = 'Unknown'; 
+    END CASE;
+
+    
+    SELECT emp_id,emp_grade,emp_title AS Result;
+
+
+
+END
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+

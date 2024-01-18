@@ -1,0 +1,43 @@
+1) WAP to input two numbers and find out what is the output of all arithmetic operations.
+(Addition, Subtraction, Multiplication, Division etc.)
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `arith`(IN num1 DECIMAL, IN num2 DECIMAL)
+BEGIN
+ 
+ declare sum int ;
+ declare sub int ;
+ declare mul int ;
+ declare divi float ;
+ 
+    SET sum = num1 + num2;
+    
+ 
+    SET sub = num1 - num2;
+    
+ 
+    SET mul = num1 * num2;
+    
+  
+    IF num2 = 0 THEN
+        SET divi = 'Division by zero is undefined';
+    ELSE
+        SET divi = num1 / num2;
+    END IF;
+    
+    
+    SELECT
+       
+        num1 AS 'Number 1',
+        num2 AS 'Number 2',
+        
+        sum AS 'Addition',
+        sub AS 'Subtraction',
+        mul AS 'Multiplication',
+        divi AS 'Division';
+END
+
+
+
+
+call arith(15,10);

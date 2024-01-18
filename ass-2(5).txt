@@ -1,0 +1,28 @@
+5) WAP to input three nos and find out maximum and minimum from it.
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `FindMaxMin`(
+    IN p_num1 INT,
+    IN p_num2 INT,
+    IN p_num3 INT,
+    OUT p_max INT,
+    OUT p_min INT
+)
+BEGIN
+    DECLARE max_val INT;
+    DECLARE min_val INT;
+
+    SET max_val = GREATEST(p_num1, p_num2, p_num3);
+    SET min_val = LEAST(p_num1, p_num2, p_num3);
+
+    SET p_max = max_val;
+    SET p_min = min_val;
+    
+    select max_val,min_val;
+END
+
+
+
+
+
+call FindMaxMin(5,8,9,@max,@min);

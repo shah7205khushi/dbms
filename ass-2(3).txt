@@ -1,0 +1,20 @@
+3) WAP to print first 10 odd numbers using for loop.
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `oddnum`()
+BEGIN
+    DECLARE cnt INT;
+    SET cnt = 1;
+
+    WHILE cnt < 20 DO
+        IF cnt % 2 != 0 THEN
+            SELECT cnt AS OddNumber;
+        END IF;
+        SET cnt = cnt + 1;
+    END WHILE;
+END
+
+
+
+
+call oddnum();

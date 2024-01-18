@@ -1,0 +1,190 @@
+Q:7
+-------------
+
+
+create database ass2;
+use ass2;
+
+CREATE TABLE Customer (
+    cust_id INT PRIMARY KEY,
+    cust_name VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    city VARCHAR(255)
+);
+
+call InsertCustomerRecord();
+
+select * from customer;
+
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertCustomerRecord`()
+BEGIN
+    INSERT INTO Customer (cust_id, cust_name, address, city)
+    VALUES (1,'khushi','vasna','ahmedabad'),
+		(2,'kush','paldi','surat'),
+        (3,'krisa','naroda','mumbai'),
+        (4,'jil','navrangpura','ahmedabad'),
+        (5,'khushbu','narol','ahmedabad');
+END
+
+
+
+
+-------
+Q:1
+
+--------
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GenerateEmployeeInfo`()
+BEGIN
+    DECLARE emp_name VARCHAR(255);
+    DECLARE emp_deptno INT;
+    DECLARE emp_salary DECIMAL(10, 2);
+    declare done int;
+    
+
+    DECLARE emp_cursor CURSOR FOR SELECT empname, deptno, salary FROM EMP;
+    
+   
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    
+   
+    SET done = 0;
+    
+    OPEN emp_cursor;
+    
+
+    read_loop: LOOP
+        FETCH emp_cursor INTO emp_name, emp_deptno, emp_salary;
+        
+        IF done= 1 THEN
+            LEAVE read_loop;
+        END IF;
+        
+
+        SELECT CONCAT(emp_name, ' employee working in department ', emp_deptno, ' earns Rs. ', emp_salary) AS 'Employee Info';
+    END LOOP;
+
+    CLOSE emp_cursor;
+    
+   
+END
+
+
+
+
+
+
+CREATE TABLE EMP (
+    empno INT PRIMARY KEY,
+    empname VARCHAR(255),
+    salary DECIMAL(10, 2),
+    deptno INT
+);
+
+
+INSERT INTO EMP (empno, empname, salary, deptno)
+VALUES
+    (1, 'krisa', 50000.00, 101),
+    (2, 'khushi', 60000.00, 102),
+    (3, 'jinal', 55000.00, 101),
+    (4, 'vidhi', 58000.00, 103),
+    (5, 'dhruvi', 52000.00, 102);
+    
+    call GenerateEmployeeInfo();
+
+
+
+output
+-------
+
+
+krisa employee working in department 101 earns Rs. 50000.00
+khushi employee working in department 102 earns Rs. 60000.00
+jinal employee working in department 101 earns Rs. 55000.00
+vidhi employee working in department 103 earns Rs. 58000.00
+dhruvi employee working in department 102 earns Rs. 52000.00
+
+
+
+
+---------
+
+Q:2
+
+------
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateSalaryForDept10`()
+BEGIN
+    DECLARE emp_no INT;
+    DECLARE emp_sal DECIMAL(10, 2);
+    DECLARE done INT DEFAULT 0;
+    DECLARE rows_affected INT DEFAULT 0;
+    
+    DECLARE cur CURSOR FOR SELECT empno, salary FROM EMPs WHERE deptno = 10;
+    
+    
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN cur;
+    
+    read_loop: LOOP
+        FETCH cur INTO emp_no, emp_sal;
+        IF done = 1 THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- Update the salary by 20%
+        SET emp_sal = emp_sal * 1.20;
+        UPDATE EMPs SET salary = emp_sal 
+        WHERE empno = emp_no;
+        
+        SET rows_affected = rows_affected + 1;
+        
+    END LOOP;
+    CLOSE cur;
+
+    IF rows_affected > 0 THEN
+        SELECT CONCAT(rows_affected, ' rows affected.');
+    ELSE
+        SELECT 'No rows were affected.';
+    END IF;
+END
+
+
+
+
+
+
+
+CREATE TABLE EMPs (
+    empno INT PRIMARY KEY,
+    empname VARCHAR(255),
+    salary DECIMAL(10, 2),
+    deptno INT
+);
+
+-- Inserting sample data into the EMP table
+INSERT INTO EMPs (empno, empname, salary, deptno)
+VALUES
+    (1, 'krisa', 50000.00, 10),
+    (2, 'khushi', 60000.00, 20),
+    (3, 'jinal', 55000.00, 30),
+    (4, 'vidhi', 58000.00, 10),
+    (5, 'dhruvi', 52000.00, 10);
+    
+    select * from EMPs;
+    
+    
+    
+    call UpdateSalaryForDept10();
+
+
+
+
+

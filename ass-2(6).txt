@@ -1,0 +1,45 @@
+create database ass2;
+use ass2;
+
+/*
+6) WAP to input empno from keybord. Check whether inputted empno exist in emp table
+or not. If not give error message otherwise display name and salary of that employee.*/
+
+CREATE TABLE emp (
+    empno INT PRIMARY KEY,
+    e_name VARCHAR(255),
+    salary DECIMAL(10, 2)
+);
+
+INSERT INTO emp (empno, e_name, salary) VALUES
+(101, 'John Doe', 50000.00),
+(102, 'Jane Smith', 60000.00),
+(103, 'Bob Johnson', 55000.00),
+(104, 'Alice Williams', 70000.00);
+
+
+CALL GetEmployeeDetails(193);
+-- Error: Employee not found
+
+CALL GetEmployeeDetails(103);
+-- Employee Name: 	Bob Johnson	Salary: 	55000.00
+
+
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetEmployeeDetails`(IN empno INT)
+BEGIN
+    DECLARE emp_name VARCHAR(255);
+    DECLARE emp_salary DECIMAL(10, 2);
+
+    SELECT e_name, salary INTO emp_name, emp_salary
+    FROM emp
+    WHERE emp.empno = empno;
+
+    IF emp_name IS NOT NULL THEN
+        SELECT 'Employee Name: ', emp_name, 'Salary: ', emp_salary AS Result;
+    ELSE
+        SELECT 'Error: Employee not found' AS Result;
+    END IF;
+END
