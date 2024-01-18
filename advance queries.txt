@@ -1,0 +1,231 @@
+------------------------------------------------------------------------------------------------
+exercise 5.3 (queries)
+----------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:1
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+SELECT DISTINCT A.aname
+FROM Aircraft A
+WHERE A.Aid IN (SELECT C.aid
+FROM Certified C, Employees E
+WHERE C.eid = E.eid AND
+NOT EXISTS ( SELECT *
+FROM Employees E1
+WHERE E1.eid = E.eid AND E1.salary < 80000 ));
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:2
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT C.eid, MAX(A.crusingrange)
+FROM Certified C, Aircraft A
+WHERE C.aid = A.aid
+GROUP BY C.eid
+HAVING COUNT(*) > 3;
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:3
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+ SELECT DISTINCT *
+FROM Employees E
+WHERE E.salary < ( SELECT MIN(flights.price)
+FROM flights
+WHERE flights.origin = "Los angeles" AND flights.destination = "Honolulu" );
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:4
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT Temp.name, Temp.AvgSalary
+FROM ( SELECT A.aid, A.aname AS name,
+AVG (E.salary) AS AvgSalary
+FROM Aircraft A, Certified C, Employees E
+WHERE A.aid = C.aid AND
+C.eid = E.eid AND A.crusingrange > 1000
+GROUP BY A.aid, A.aname ) AS Temp;
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:5
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT DISTINCT E.ename
+FROM Employees E, Certified C, Aircraft A
+WHERE E.eid = C.eid AND
+C.aid = A.aid AND
+A.aname LIKE "Boeing%";
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:6
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT A.aid,A.aname
+FROM Aircraft A
+WHERE A.crusingrange > ( SELECT MIN(F.distance)
+FROM Flights F
+WHERE F.origin = "Los Angeles" AND F.destination = "Chicago" );
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:7
+---------------------------------------------------------------------------------------------------------------------------------
+
+SELECT DISTINCT F.origin, F.destination
+FROM Flights F
+WHERE NOT EXISTS ( SELECT *
+FROM Employees E
+WHERE E.salary > 100000
+AND
+NOT EXISTS (SELECT *
+FROM Aircraft A, Certified C
+WHERE A.crusingrange > F.distance
+AND E.eid = C.eid
+AND A.aid = C.aid) );
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:8
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT DISTINCT E.ename
+FROM Employees E
+WHERE E.eid IN ( ( SELECT C.eid
+FROM Certified C
+WHERE EXISTS ( SELECT A.aid
+FROM Aircraft A
+WHERE A.aid = C.aid
+AND A.crusingrange > 3000 )
+AND
+NOT EXISTS ( SELECT A1.aid FROM Aircraft A1
+WHERE A1.aid = C.aid AND A1.aname LIKE "Boeing%" )));
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:9
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT F.departs,flno
+FROM Flights F
+WHERE F.flno IN ( ( SELECT F0.flno
+FROM Flights F0
+WHERE F0.origin= "Madison" AND F0.destination = "New York"
+AND F0.arrives < "2005-04-12 18:00" )
+UNION ( SELECT F0.flno
+FROM Flights F0, Flights F1
+WHERE F0.origin = "Madison" AND F0.destination <> "New York"
+AND F0.origin = F1.destination AND F1.destination = "New York"
+AND F1.departs > F0.arrives
+AND F1.arrives < "2005-04-12 18:00" )
+UNION ( SELECT F0.flno
+FROM Flights F0, Flights F1, Flights F2
+WHERE F0.destination = "Madison"
+AND F0.destination = F1.origin
+AND F1.destination = F2.origin
+AND F2.destination = "New York"
+AND F0.destination <> "New York"
+AND F1.destination <> "New York"
+AND F1.departs > F0.arrives
+AND F2.departs > F1.arrives
+AND F2.arrives < "2005-04-12 18:00" ));
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:10
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT Temp1.avg - Temp2.avg
+FROM (SELECT AVG (E.salary) AS avg
+FROM Employees E
+WHERE E.eid IN (SELECT DISTINCT C.eid
+FROM Certified C )) AS Temp1,
+(SELECT AVG (E1.salary) AS avg
+FROM Employees E1 ) AS Temp2;
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:11
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT E.ename, E.salary
+FROM Employees E
+WHERE E.eid NOT IN ( SELECT DISTINCT C.eid
+FROM Certified C ) AND E.salary > ( SELECT AVG (E1.salary)
+FROM Employees E1
+WHERE E1.eid IN
+( SELECT DISTINCT C1.eid
+FROM Certified C1 ) );
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:12
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT Employees.ename,Aircraft.crusingrange  FROM Employees
+inner join Certified on  Employees.eid = Certified.eid
+inner join Aircraft on  Certified.aid = Aircraft.aid
+where Aircraft.crusingrange > 5000;
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:13
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT Employees.ename,Aircraft.crusingrange  FROM Employees
+inner join Certified on  Employees.eid = Certified.eid
+inner join Aircraft on  Certified.aid = Aircraft.aid
+group by Employees.ename,Aircraft.crusingrange
+having Aircraft.crusingrange > 1000 and count(*) > 1;
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+Query:14
+---------------------------------------------------------------------------------------------------------------------------------
+
+SELECT Employees.ename,Aircraft.aname  FROM Employees
+right join Certified on  Employees.eid = Certified.eid
+right join Aircraft on  Certified.aid = Aircraft.aid
+group by Employees.ename,Aircraft.aname,Aircraft.crusingrange
+having Aircraft.crusingrange > 1000 and Aircraft.aname like "Boeing%";
+
+
+
+
+
+=====================================================================================================================================================================================
