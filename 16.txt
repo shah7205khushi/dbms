@@ -1,0 +1,93 @@
+use db1_cursor;
+-- 16. Write a program that gives all employees in
+--  department 10 a 15% pay increase. Display a
+-- message displaying how many Employees were awarded the increase.
+drop table if exists tb1; 
+create table tb1
+(
+	dept_id int,
+    emp_id int,
+	salary int
+);
+ insert into tb1()
+ values(10,1,10000),
+ (11,2,21000),
+ (10,4,11000),
+ (10,8,31000),
+ (9,3,12000),
+ (10,5,19000);
+ 
+ call increase_salary();
+ -- Call the stored procedure to give pay increase
+CALL GivePayIncrease();
+select * from tb1;
+_______________________procedure_________________________
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GivePayIncrease`()
+BEGIN
+DECLARE pay_increase DECIMAL(10, 2);
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE emp_count INT DEFAULT 0;
+  DECLARE e_id INT;
+  DECLARE e_salary DECIMAL(10, 2);
+  declare d_id int;
+
+  -- Declare cursor to fetch employees in department 10
+  DECLARE employee_cursor CURSOR FOR
+    SELECT emp_id, salary,dept_id
+    FROM tb1
+    WHERE dept_id = 10;
+
+  -- Declare continue handler to exit loop
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+  -- Open the cursor
+  OPEN employee_cursor;
+
+  -- Loop through employees in department 10
+  lable:LOOP
+    FETCH employee_cursor INTO e_id,e_salary ,d_id;
+    IF done THEN
+      LEAVE lable;
+    END IF;
+
+    -- Calculate the pay increase (15%)
+    
+    SET pay_increase = e_salary * 0.15;
+
+    -- Update the employee's salary with the pay increase
+    UPDATE tb1
+    SET salary = e_salary + pay_increase
+    WHERE emp_id = e_id;
+
+    SET emp_count = emp_count + 1;
+  END LOOP;
+
+  -- Close the cursor
+  CLOSE employee_cursor;
+
+  -- Display the message
+  
+  SELECT CONCAT(emp_count, ' employees in department 10 were awarded a 15% pay increase.') AS message;
+END
+_______________________output_______________________
+
+
+# dept_id	emp_id	salary
+10	1	10000
+11	2	21000
+10	4	11000
+10	8	31000
+9	3	12000
+10	5	19000
+
+# message
+4 employees in department 10 were awarded a 15% pay increase.
+
+
+# dept_id	emp_id	salary
+10	1	11500
+11	2	21000
+10	4	12650
+10	8	35650
+9	3	12000
+10	5	21850

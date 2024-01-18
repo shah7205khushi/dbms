@@ -1,0 +1,80 @@
+-- 15. Write a PL/SQL Block to create a PL/SQL table which can store grade and on of employees
+-- with that grade. Get the information about the grade and number of employees with that
+-- grade and store it in the PL/SQL table. Then retrieve the information from the PL/SQL table
+-- and display it on the screen in the following way.
+-- No of employees with the grade 1 are 3
+-- No of employees with the grade 2 are 2
+-- No of employees with the grade 3 are 1
+-- No of employees with the grade 4 are 2
+-- No of employees with the grade 5 are 5
+
+CREATE DATABASE db1_cursor;
+use db1_cursor;
+
+create table emp_table
+(
+	grade int,
+    num_of_emp int
+);
+insert into emp_table()
+values(1,3),
+(2,2),
+(3,1),
+(4,2),
+(5,5);
+
+call get_emp_count();
+
+-- ___________________________________procedure__________________________________ 
+USE `db1_cursor`;
+DROP procedure IF EXISTS `get_emp_count`;
+
+USE `db1_cursor`;
+DROP procedure IF EXISTS `db1_cursor`.`get_emp_count`;
+;
+
+DELIMITER $$
+USE `db1_cursor`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_emp_count`()
+BEGIN
+	declare gr int;
+    declare count int;
+    declare done int default 0;
+    declare c1 cursor for select grade,num_of_emp from emp_table;
+    declare continue handler for not found set done = 1;
+    open c1;
+    
+    loop_lable:loop
+	fetch c1 into gr,count;
+    if done = 1 then
+    leave loop_lable;
+	end if;
+    select concat( "number of employees with grade ",gr," are ",count) as output;
+    end loop loop_lable;
+    
+END$$
+
+DELIMITER ;
+;
+-- ___________________________________output__________________________________ 
+-- # output
+-- number of employees with grade 1 are 3
+
+-- # output
+-- number of employees with grade 2 are 2
+
+-- # output
+-- number of employees with grade 3 are 1
+
+-- # output
+-- number of employees with grade 4 are 2
+
+-- # output
+-- number of employees with grade 5 are 5
+
+# output
+number of employees with grade 2 are 2
+
+
+
+

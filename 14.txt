@@ -1,0 +1,57 @@
+/*
+14. Write a PL/SQL block to accept an employee number.
+and use a record variable to store the
+record of that employee. and insert it into retired_employee table.
+Retired_employee table has the following structure
+Retired_employee (empno, ename, hiredate, leaveDate, salary, mgr_id, deptno).
+Set the leavedate to the current date.
+*/
+create database db111;
+use db111;
+create table emp(
+num int primary key,
+    ename varchar(50),
+    hiredate date,
+    salary int,
+    mgr_id int,
+    deptno int
+);
+insert into emp(num,ename,hiredate,salary,mgr_id,deptno)
+values(6,"jinal","2005/04/09",50000,6,3),
+(2,"kavita","2005/04/09",5000,6,3),
+(3,"savina","2005/04/09",500,6,2),
+(4,"karina","2005/04/09",70000,6,2),
+(5,"nisha","2005/04/09",200,6,1);
+create table retired_emp(
+num int primary key,
+    ename varchar(50),
+    hiredate date,
+    leavedate date,
+    salary int,
+    mgr_id int,
+    deptno int
+);
+call insert_into_retired_table(3);
+select * from emp;
+select * from retired_emp;
+_________________________________________________________________________
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_into_retired_table`(in emp_no int)
+BEGIN
+
+declare e_num int(11);
+declare e_name varchar(50) ;
+declare e_hiredate date ;
+declare e_salary int(11) ;
+declare e_mgr_id int(11) ;
+declare e_deptno int(11) ;
+declare done int default 0;
+    declare record cursor for select num,ename,hiredate,salary,mgr_id,deptno from emp where num = emp_no;
+    declare continue handler for not found set done = 1;
+    open record;
+    fetch record into  e_num,e_name,e_hiredate,e_salary,e_mgr_id,e_deptno;
+    insert into retired_emp(num,ename,hiredate,leavedate,salary,mgr_id,deptno)
+    values(e_num,e_name,e_hiredate,current_date(),e_salary,e_mgr_id,e_deptno);
+    close record;
+   
+END

@@ -1,0 +1,58 @@
+* 21. Write a PL/SQL block to display the top 6 employees with respect to salaries using cursors. */
+
+use db2;
+
+
+CREATE TABLE emps (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(255),
+    salary DECIMAL(10, 2)
+);
+
+INSERT INTO emps(employee_id, employee_name, salary)
+VALUES
+    (1, 'khushi', 70000.00),
+    (2, 'Jil', 80000.00),
+    (3, 'kavya', 85000.00),
+    (4, 'prachi', 72000.00),
+    (5, 'dhurvi', 90000.00),
+    (6, 'yashvi', 78000.00),
+    (7, 'nishka', 95000.00),
+    (8, 'keya', 87000.00),
+    (9, 'divya', 92000.00),
+    (10, 'manya', 83000.00);
+
+
+CALL topempbysalary();
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `topempbysalary`()
+BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE emp_id INT;
+    DECLARE emp_name VARCHAR(255);
+    DECLARE emp_salary DECIMAL(10, 2);
+    
+    DECLARE emp_cursor CURSOR FOR
+        SELECT employee_id, employee_name, salary
+        FROM emps
+        ORDER BY salary DESC
+        LIMIT 6;
+        
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN emp_cursor;
+    
+    read_loop: LOOP
+        FETCH emp_cursor INTO emp_id, emp_name, emp_salary;
+        
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        
+        SELECT emp_id, emp_name, emp_salary;
+        
+    END LOOP;
+    
+    CLOSE emp_cursor;
+END

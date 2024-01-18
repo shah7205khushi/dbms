@@ -1,0 +1,100 @@
+20.)Write a PL/SQL Block that mimics selecting all columns and rows from the dept table. There
+is no need to format the output, just select all columns and all rows. Use a cursor FOR loop.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+create database db2;
+use db2;
+
+
+
+CREATE TABLE dept (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(50),
+    dept_location VARCHAR(50)
+);
+
+
+INSERT INTO dept (dept_id, dept_name, dept_location)
+VALUES
+    (1, 'HR', 'New York'),
+    (2, 'Finance', 'Chicago'),
+    (3, 'Marketing', 'India'),
+    (4, 'Engineering', 'U.S'),
+    (5, 'Sales', 'Africa');
+    
+
+    select * from dept;
+
+    
+
+    CALL selectdept();
+
+
+--  procedure
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `selectdept`()
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE dept_id INT;
+    DECLARE dept_name VARCHAR(50);
+    DECLARE dept_location VARCHAR(50);
+    
+   
+
+    DECLARE cur CURSOR FOR
+        SELECT * FROM dept;
+    
+  
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+
+    OPEN cur;
+    
+
+    read_loop: LOOP
+        
+        FETCH cur INTO dept_id, dept_name, dept_location;
+       
+
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        
+
+        SELECT dept_id, dept_name, dept_location;
+    END LOOP;
+    
+
+    CLOSE cur;
+    
+END
+
+
+
+-- output
+
+
+dept_id, dept_name, 	dept_location
+
+1	   HR		New York
+
+dept_id, dept_name, 	dept_location
+
+2	Finance		Chicago
+
+dept_id, dept_name, 	dept_location
+
+3	  Marketing	india
+
+dept_id, dept_name, 	dept_location
+
+4	Engineering	u.s
+
+dept_id, dept_name, 	dept_location
+
+5	Sales		africa
+		

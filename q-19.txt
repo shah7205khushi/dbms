@@ -1,0 +1,84 @@
+-- 19. Display the names of employees who are working for Department 30.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(255)
+);
+
+
+
+
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(255),
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+);
+
+
+
+INSERT INTO departments (department_id, department_name)
+VALUES
+    (30, 'GU '),
+    (40, 'RCC');
+
+
+
+INSERT INTO employees (employee_id, employee_name, department_id)
+VALUES
+    (1, 'khushi', 30),
+    (2, 'Jil', 30),
+    (3, 'kavya', 40);
+
+
+
+CALL EmpofDept30();
+
+
+-- procedure
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EmpofDept30`()
+BEGIN
+    DECLARE emp_name VARCHAR(255);
+    DECLARE done INT DEFAULT 0;
+    
+    DECLARE emp_cursor CURSOR FOR
+        SELECT employee_name
+        FROM employees
+        WHERE department_id = 30;
+        
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN emp_cursor;
+    
+    read_loop: LOOP
+        FETCH emp_cursor INTO emp_name;
+        
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        
+        SELECT emp_name;
+        
+    END LOOP;
+    
+    CLOSE emp_cursor;
+END
+
+
+
+
+--  ==OUTPUT==
+
+
+
+ emp_name
+khushi
+
+emp_name
+Jil
+
+

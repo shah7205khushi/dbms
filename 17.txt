@@ -1,0 +1,90 @@
+-- 17. Write a PL/SQL block and use cursor to retrieve 
+-- the details of the employees with grade
+-- 5.and then display employee no,job_id ,max_sal and 
+-- min_sal and grade for all these employees.
+USE DB1;
+CREATE TABLE TB1
+(
+	num int,
+    grade int,
+    job_id int,
+    sal int
+);
+insert into tb1()
+values
+(1,5,101,50),
+(2,3,102,40),
+(3,4,103,60),
+(4,5,102,70),
+(5,5,102,20),
+(6,5,101,10);
+select grade,max(sal) from tb1 group by grade having grade = 5;
+select grade,min(sal) from tb1 group by grade having grade = 5;
+call grade5();
+___________________procedure________________________________
+USE `db1`;
+DROP procedure IF EXISTS `grade5`;
+
+USE `db1`;
+DROP procedure IF EXISTS `db1`.`grade5`;
+;
+
+DELIMITER $$
+USE `db1`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `grade5`()
+BEGIN
+
+declare e_id int;
+declare e_gr int;
+declare j_id int;
+declare salary int;
+declare max_salary int;
+declare min_salary int;
+
+declare done int default 0;
+
+declare c1 cursor for select num,grade,job_id,sal from tb1 where grade = 5;
+-- declare c1 cursor for select num,grade,job_id,sal,max(salary ) as max_salary,min(salary) as min_salary from tb1 where grade = 5 group by num;
+declare continue handler for not found set done = 1;
+
+	open c1;
+		loop_lable:loop
+			fetch c1 into e_id,e_gr,j_id,salary;
+            
+			if done = 1 then 
+            leave loop_lable;
+            end if;
+            
+            -- select e_id,e_gr,j_id,salary;
+        end loop loop_lable;
+        select grade,max(sal) from tb1 group by grade having grade = 5;
+select grade,min(sal) from tb1 group by grade having grade = 5;
+close c1;
+
+
+END$$
+
+DELIMITER ;
+;
+
+____________________________output_____________________________________
+# e_id	e_gr	j_id	salary
+1	5	101	50
+
+# e_id	e_gr	j_id	salary
+4	5	102	70
+
+# e_id	e_gr	j_id	salary
+5	5	102	20
+
+# e_id	e_gr	j_id	salary
+6	5	101	10
+
+# grade	max(sal)
+5	70
+
+# grade	min(sal)
+5	10
+
+
+

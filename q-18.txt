@@ -1,0 +1,78 @@
+18. Write a PL/SQL block that copies all departments to a table called old_dept. Do not use a
+cursor FOR loop. Display how many rows were copied.
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+create database db5;
+use db5;
+
+
+CREATE TABLE departments (
+    department_id INT,
+    department_name VARCHAR(50),
+    location VARCHAR(50)
+);
+
+
+
+CREATE TABLE old_dept (
+    department_id INT ,
+    department_name VARCHAR(50),
+    location VARCHAR(50)
+);
+
+
+
+INSERT INTO departments (department_id, department_name, location)
+VALUES
+    (1, 'HR', 'New York'),
+    (2, 'Finance', 'Chicago'),
+    (3, 'Marketing', 'India'),
+    (4, 'Engineering', 'U.S'),
+    (5, 'Sales', 'Africa');
+    
+
+
+    select * from departments;
+    
+    select * from old_dept;
+    
+
+
+
+CALL CopyDepartmentsToOldDept();
+
+
+
+
+-- procedure
+
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CopyDepartmentsToOldDept`()
+BEGIN
+    INSERT INTO old_dept SELECT * FROM departments;
+    SELECT CONCAT('Copied ', ROW_COUNT(), ' rows to old_dept.') AS Message;
+    select * from old_dept;
+END
+
+
+
+
+
+
+-- output
+
+Copied 5 rows to old_dept.
+
+department_id, department_name, location
+1		HR	  	New York
+2		Finance	 	Chicago
+3		Marketing	India
+4		Engineering	U.S
+5		Sales		Africa
+		
