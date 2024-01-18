@@ -1,0 +1,421 @@
+
+create database human_resource_management;
+use human_resource_management;
+
+
+
+-- client table  
+
+
+
+create table client_table
+(
+	c_id varchar(6) primary key,
+    c_name varchar(35),
+    c_url varchar(50),
+    c_dese varchar(255)
+);
+
+desc client_table;
+
+
+
+
+create table client_address_table
+(
+	c_a_id varchar(6) primary key,
+    c_id varchar(6),
+    foreign key (c_id) references client_table (c_id),
+    c_a_type varchar(20),
+    c_a_1 varchar(50),
+    c_a_2 varchar(50),
+    c_city varchar(35),
+    c_state varchar(35),
+    c_country varchar(25),
+    c_zip varchar(25)
+);
+
+desc client_address_table;
+
+
+
+
+create table client_contact_mod_table
+(
+	c_c_id varchar(6) primary key,
+    c_a_id varchar(6),
+	foreign key (c_a_id) references client_address_table (c_a_id),
+    c_c_type varchar(25),
+    c_c_data varchar(50)
+);
+
+desc client_contact_mod_table;
+
+-- --------------------------------------------------------------------------------
+-- candidate table  
+create table candidate_table
+(
+	cand_id varchar(6) primary key,
+    cand_first_name varchar(35),
+    cand_middle_name varchar(35),
+    cand_last_name varchar(35),
+    cand_father_name varchar(35),
+    cand_marital_status varchar(4),
+    cand_birthdate date,
+    cand_birthplace varchar(35),
+    cand_religion varchar(35),
+    cand_salary_expected decimal(10,2),
+    cand_email varchar(50),
+    cand_job_experience decimal(8,2)
+    );
+    
+    desc candidate_table;
+
+
+
+
+create table candidate_address_table
+(
+	cand_a_id varchar(6) primary key,
+    cand_id varchar(6),
+    foreign key (cand_id) references candidate_table (cand_id),
+    cand_a_1 varchar(50),
+    cand_a_2 varchar(50),
+	cand_city varchar(35),
+    cand_state varchar(35),
+    cand_country varchar(25),
+    cand_zip int(25),
+	cand_telephone_no int(25),
+	cand_mobile_no int(25)
+);
+
+desc candidate_address_table;
+
+
+
+
+
+create table candidate_qualification_table
+(
+	qual_id varchar(6) primary key,
+    cand_id varchar(6),
+    qual_type varchar(15),
+    foreign key (cand_id) references candidate_table (cand_id),  
+    exam_name varchar(50),
+    institution_name varchar(50),
+    board_name varchar(50),
+    year_of_passing int(10),
+    exam_class_no varchar(20),
+    remark varchar(255)
+);
+
+desc candidate_qualification_table;
+
+
+
+
+insert into client_table(c_id,c_name,c_url,c_dese)
+values('CLT001','SCT India','http://sctindia.com','software package firm');
+
+insert into client_table(c_id,c_name,c_url,c_dese)
+values('CLT002','ABCL crop','http://abcl.com','dealer in kitchen utensils');
+
+insert into client_table(c_id,c_name,c_url,c_dese)
+values('CLT003','dell crop','http://dellcrop.com','dealer in computer peripherals');
+
+insert into client_table(c_id,c_name,c_dese)
+values('CLT004','essenpross','dealer in electronics');
+
+select * from client_table;
+
+
+
+
+
+
+insert into client_address_table(c_a_id,c_id,c_a_type,c_a_1,c_a_2,c_city,
+c_state,c_country,c_zip)
+values('CLA001','CLT001','official','jay chambers','s.v. road','mumbai',
+	'Maharashtra','India','400057');
+    
+insert into client_address_table(c_a_id,c_id,c_a_type,c_a_1,c_a_2,c_city,
+c_state,c_country,c_zip)
+values('CLA002','CLT002','official','Essenpross','Manchen road','chinow',
+	'Beijing','china','400058');
+    
+insert into client_address_table(c_a_id,c_id,c_a_type,c_a_1,c_a_2,c_city,
+c_state,c_country,c_zip)
+values('CLA003','CLT003','personal','arjuna estate','Lakhan road','colombo',
+	'colombo','shrilanka','400064');
+    
+    insert into client_address_table(c_a_id,c_id,c_a_type,c_a_1,c_a_2,c_city,
+c_state,c_country,c_zip)
+values('CLA004','CLT004','official','Laxmi Ind.estate','L.S. marg','bangalore',
+	'karnataka','India','400017');
+    
+    
+    insert into client_address_table(c_a_id,c_id,c_a_type,c_a_1,c_a_2,c_city,
+c_state,c_country,c_zip)
+values('CLA005','CLT005','official','fantasy villa','washington road','chicago',
+	'chicago','america','400087');
+    
+    insert into client_address_table(c_a_id,c_id,c_a_type,c_a_1,c_a_2,c_city,
+c_state,c_country,c_zip)
+values('CLA006','CLT006','personal','rose apartment','highway','vinci',
+	'vancouver','canada','400057');
+    
+    insert into client_address_table(c_a_id,c_id,c_a_type,c_a_1,c_a_2,c_city,
+c_state,c_country,c_zip)
+values('CLA007','CLT007','official','30 MIDC road','MaDurga lane','kolakatta',
+	'west bengal','India','400001');
+    
+    insert into client_address_table(c_a_id,c_id,c_a_type,c_a_1,c_a_2,c_city,
+c_state,c_country,c_zip)
+values('CLA008','CLT001','personal','jay chambers','s.v. road','mumbai',
+	'Maharashtra','India','400057');
+    
+    select * from client_address_table;
+    
+
+
+
+
+
+select * from client_table;
+
+
+insert into client_contact_mod_table(c_c_id,c_a_id,c_c_type,c_c_data)
+values('CCT001','CLA001','telephone','022876876');
+
+insert into client_contact_mod_table(c_c_id,c_a_id,c_c_type,c_c_data)
+values('CCT002','CLA002','e-mail','myid@gmail.com');
+
+insert into client_contact_mod_table(c_c_id,c_a_id,c_c_type,c_c_data)
+values('CCT003','CLA003','fax number','02287687698');
+
+insert into client_contact_mod_table(c_c_id,c_a_id,c_c_type,c_c_data)
+values('CCT004','CLA004','mobile','022876845');
+
+insert into client_contact_mod_table(c_c_id,c_a_id,c_c_type,c_c_data)
+values('CCT005','CLA001','Fax number','022876864');
+
+insert into client_contact_mod_table(c_c_id,c_a_id,c_c_type,c_c_data)
+values('CCT006','CLA002','mobile','0228766788');
+
+insert into client_contact_mod_table(c_c_id,c_a_id,c_c_type,c_c_data)
+values('CCT007','CLA004','mobile','0228768765');
+
+insert into client_contact_mod_table(c_c_id,c_a_id,c_c_type,c_c_data)
+values('CCT008','CLA004','e-mail','k1@gmail.com');
+
+select * from  client_contact_mod_table;
+
+
+
+
+
+
+insert into candidate_table(cand_id,cand_first_name,cand_middle_name,cand_last_name,cand_father_name,cand_marital_status,
+  cand_birthdate,cand_birthplace,cand_religion,cand_salary_expected,cand_email,cand_job_experience)
+  values("cand1","savita","ramesh","shah","ramesh","yes","1981/01/03","mumbai","hindu","75500","abc@gmail.com","3");
+  
+    insert into candidate_table(cand_id,cand_first_name,cand_middle_name,cand_last_name,cand_father_name,cand_marital_status,
+  cand_birthdate,cand_birthplace,cand_religion,cand_salary_expected,cand_email,cand_job_experience)
+  values("cand2","kavita","sanjay","javiri","sanjay","no","1982/01/01","banglore","christian","50000","bcd@gmail.com","4");
+  
+    insert into candidate_table(cand_id,cand_first_name,cand_middle_name,cand_last_name,cand_father_name,cand_marital_status,
+  cand_birthdate,cand_birthplace,cand_religion,cand_salary_expected,cand_email,cand_job_experience)
+  values("cand3","babita","amay","mathur","amay","yes","1973/04/05","banglore","christian","75500","cde1@gmail.com","2");
+  
+    insert into candidate_table(cand_id,cand_first_name,cand_middle_name,cand_last_name,cand_father_name,cand_marital_status,
+  cand_birthdate,cand_birthplace,cand_religion,cand_salary_expected,cand_email,cand_job_experience)
+  values("cand4","lalita","samay","vachheta","samay","no","1976/06/22","kolkata","christian","50000","efg@gmail.com","5");
+  
+    insert into candidate_table(cand_id,cand_first_name,cand_middle_name,cand_last_name,cand_father_name,cand_marital_status,
+  cand_birthdate,cand_birthplace,cand_religion,cand_salary_expected,cand_email,cand_job_experience)
+  values("cand5","anita","mahesh","bhati","mahesh","yes","1976/07/03","banglore","christian","75500","hijk@gmail.com","2");
+
+
+select * from candidate_table;
+
+
+
+
+
+
+insert into candidate_address_table(cand_a_id,cand_id,cand_a_1,cand_a_2,
+cand_city,cand_state,cand_country,cand_zip,cand_telephone_no,cand_mobile_no)
+values('c_a_1','cand1','tirupati','goregaon  ','mumbai','maharastar',
+	'india','354355','98765432','354355');
+    insert into candidate_address_table(cand_a_id,cand_id,cand_a_1,cand_a_2,
+cand_city,cand_state,cand_country,cand_zip,cand_telephone_no,cand_mobile_no)
+values('c_a_2','cand2','navavadaj','chandlodia ','ahm',
+	'gujarat','singapore','764656','93826489','893487521');
+
+insert into candidate_address_table(cand_a_id,cand_id,cand_a_1,cand_a_2,
+cand_city,cand_state,cand_country,cand_zip,cand_telephone_no,cand_mobile_no)
+values('c_a_3','cand3','bhimjipura','ghatlodia','surat','rajthan',
+	'china','653467','76541234','876543212');
+
+insert into candidate_address_table(cand_a_id,cand_id,cand_a_1,cand_a_2,
+cand_city,cand_state,cand_country,cand_zip,cand_telephone_no,cand_mobile_no)
+values('c_a_4','cand4','vadaj','vasna','baroda',
+	'chhennei','korea','354355','93826489','354355643');
+
+insert into candidate_address_table(cand_a_id,cand_id,cand_a_1,cand_a_2,
+cand_city,cand_state,cand_country,cand_zip,cand_telephone_no,cand_mobile_no)
+values('c_a_5','cand5','usmanpura','paldi ','mumbai',
+	'kerela','japan','653467','87585577','354355765');
+
+select * from candidate_address_table;
+
+
+
+
+
+
+
+
+insert into candidate_qualification_table(qual_id,cand_id,qual_type,exam_name,institution_name,board_name,
+year_of_passing,exam_class_no)
+values('q1','cand1','academic','msc in cs ','gscb','mumbai',
+	'1987','first');
+
+insert into candidate_qualification_table(qual_id,cand_id,qual_type,exam_name,institution_name,board_name,
+year_of_passing,exam_class_no)
+values('q2','cand2','academic','bba ','mumbai university','maharastra',
+	'2023','dist');
+    
+    insert into candidate_qualification_table(qual_id,cand_id,qual_type,exam_name,institution_name,board_name,
+year_of_passing,exam_class_no)
+values('q3','cand3','professional','mba','b.y. patel college','pune university',
+	'2006','second');
+    
+    insert into candidate_qualification_table(qual_id,cand_id,qual_type,exam_name,institution_name,board_name,
+year_of_passing,exam_class_no)
+values('q4','cand4','technical','pgdca ','h.l. college','gujrat university',
+	'2003','pass');
+    
+    insert into candidate_qualification_table(qual_id,cand_id,qual_type,exam_name,institution_name,board_name,
+year_of_passing,exam_class_no)
+values('q5','cand5','professional','aiml','govt. in engg. college','kerela',
+	'1984','second');
+    
+    select * from candidate_qualification_table;
+
+
+drop database human_resource_management;
+
+-- queries pg no:145 --
+
+-- retrieving data --
+
+-- query : a --
+
+
+select cand_id,cand_first_name, cand_birthdate,cand_birthplace from candidate_table;
+
+
+
+-- query : b --
+
+
+select cand_a_id,cand_id,cand_a_1,cand_a_2,cand_city,cand_state,cand_country,cand_zip from candidate_address_table;
+
+-- query : c --
+
+
+select qual_id,exam_name,board_name from candidate_qualification_table;
+
+
+-- query : d --
+
+
+select c_a_id,c_id,c_a_type,c_a_1,c_a_2,c_city,c_state,c_country,c_zip from client_address_table;
+
+
+-- query : e --
+
+
+select qual_id,cand_id,qual_type,year_of_passing from candidate_qualification_table where year_of_passing < 2001;
+
+
+-- query : f  --
+
+
+select c_a_id,c_id,c_a_type,c_city,c_state,c_country from client_address_table where c_city='mumbai';
+
+
+-- updating records--
+
+-- query : a  --
+
+update candidate_qualification_table
+set year_of_passing = '2004'
+where qual_id='q1';
+
+select * from candidate_qualification_table;
+
+-- query : b  --
+
+update client_address_table
+set  c_city = 'pune'
+where c_city = 'mumbai';
+
+
+select * from client_address_table;
+
+
+-- query : c  --
+
+update client_address_table
+set c_country='india';
+
+select * from client_address_table;
+
+
+-- query : d  --
+
+update candidate_qualification_table
+set  exam_class_no = 'first'
+where qual_id='q2';
+
+select * from candidate_qualification_table;
+
+
+
+-- deleting  record--
+
+-- query : a  --
+
+delete from client_address_table where c_state='Maharashtra';
+
+select * from client_address_table;
+
+
+-- query :  b --
+
+delete from candidate_table where cand_salary_expected > '51000';
+
+select * from candidate_table;
+
+
+-- query : c  --
+
+delete from  candidate_qualification_table where year_of_passing < 2004 ;
+
+select * from candidate_qualification_table;
+
+-- query : d  --
+
+delete from client_contact_mod_table where c_c_type = 'mobile' ;
+
+select * from  client_contact_mod_table;
+
+-- query : e  --
+
+delete from  candidate_qualification_table;
+
+select * from candidate_qualification_table;
+
+ 

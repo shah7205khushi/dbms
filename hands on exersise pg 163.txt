@@ -1,0 +1,90 @@
+-- hands on exersise for altering table --
+-- pg no - 163 --
+
+
+-- altering table--
+
+-- query : a --
+
+alter table candidate_table
+add candage int(2);
+
+desc candidate_table;
+
+-- query : b  --
+
+alter table client_address_table
+add clntphone int(8);
+
+desc client_address_table;
+
+-- query : c  --
+
+alter table client_table
+add clntemail varchar(20)after c_name;
+
+desc client_table;
+
+-- query : d  --
+
+alter table candidate_address_table
+add candpager int(20) first;
+
+desc candidate_address_table;
+
+-- query : e  --
+
+alter table client_address_table
+drop column clntphone;
+
+desc  client_address_table;
+
+-- query : f  -- 
+
+alter table candidate_qualification_table
+modify exam_name varchar(25);
+
+desc candidate_qualification_table;
+
+-- query : g  --
+
+alter table candidate_table
+modify cand_email varchar(50) after cand_religion;
+
+desc candidate_table;
+
+-- query : h  --
+
+alter table candidate_table
+modify cand_religion varchar(40) first;
+
+desc candidate_table;
+
+-- query : i  --
+
+alter table candidate_table
+change candage candcurrage varchar(3);
+
+desc candidate_table;
+
+-- query : j  --
+
+alter table client_address_table
+change  c_city city varchar(20);
+
+desc client_address_table;
+
+-- query : k --
+
+alter table client_address_table
+change c_zip c_pincode varchar(7) first;
+
+desc client_address_table;
+
+-- renaming table --
+
+alter table client_table rename client_info;
+show tables;
+
+
+

@@ -1,0 +1,108 @@
+create database HRMS;
+use HRMS;
+
+create table custdetails
+(
+cust_id int(8)primary key not null,
+cust_name varchar(20),
+cust_add varchar (20)
+);
+
+desc  custdetails;
+
+insert into custdetails(cust_id,cust_name,cust_add)
+values('101','Aarti','virar');
+
+insert into custdetails(cust_id,cust_name,cust_add)
+values('102','kavita','dadar');
+
+insert into custdetails(cust_id,cust_name,cust_add)
+values('103','shraddha','Kandivali');
+
+insert into custdetails(cust_id,cust_name,cust_add)
+values('104','Anshu','Juhu');
+
+insert into custdetails(cust_id,cust_name,cust_add)
+values('105','Sonali','Thane');
+
+select * from custdetails;
+
+create table  customer
+(
+cus_id int(8) primary key auto_increment,
+cus_name varchar(25)
+);
+
+desc customer;
+
+insert into customer(cus_name)
+values('Aasif');
+
+insert into customer(cus_name)
+values('Anil');
+
+insert into customer(cus_name)
+values('Smita');
+
+insert into customer(cus_name)
+values('John');
+
+select * from customer;
+
+create table countrydetails
+(
+country_id int(8) primary key auto_increment,
+country_name varchar(25) unique
+);
+
+desc countrydetails;
+
+insert into  countrydetails(country_name)
+values('india');
+
+insert into  countrydetails(country_name)
+values('singapore');
+
+insert into  countrydetails(country_name)
+values('china');
+
+insert into  countrydetails(country_name)
+values('america');
+
+insert into  countrydetails(country_name)
+values('south africa');
+
+select * from countrydetails;
+
+drop table countrydetails;
+
+create table billdetails
+(
+bill_id int(8) primary key not null,
+Qty int(8),
+rate int(8),
+amt int(8),
+custref int(8) not null,
+foreign key(custref)references custdetails(cust_id)
+);
+
+
+desc billdetails;
+
+insert into billdetails(bill_id,Qty,rate,amt,custref)
+values(1,5,6,30,101);
+
+insert into billdetails(bill_id,Qty,rate,amt,custref)
+values(2,4,50,200,102);
+
+insert into billdetails(bill_id,Qty,rate,amt,custref)
+values(3,12,20,240,103);
+
+insert into billdetails(bill_id,Qty,rate,amt,custref)
+values(4,3,50,150,104);
+
+insert into billdetails(bill_id,Qty,rate,amt,custref)
+values(5,7,7,49,105);
+
+
+select * from billdetails;

@@ -1,0 +1,94 @@
+create database human_resource_management;
+use human_resource_management;
+-- client table  
+
+create table client_table
+(
+	c_id varchar(6) primary key,
+    c_name varchar(35),
+    c_url varchar(50),
+    c_dese varchar(255)
+);
+
+desc client_table;
+
+create table client_address_table
+(
+	c_a_id varchar(6) primary key,
+    c_id varchar(6),
+    foreign key (c_id) references client_table (c_id),
+    c_a_type varchar(20),
+    c_a_1 varchar(50),
+    c_a_2 varchar(50),
+    c_city varchar(35),
+    c_state varchar(35),
+    c_country varchar(25),
+    c_zip varchar(25)
+);
+
+desc client_address_table;
+
+create table client_contact_mod_table
+(
+	c_c_id varchar(6) primary key,
+    c_a_id varchar(6),
+	foreign key (c_a_id) references client_address_table (c_a_id),
+    c_c_type varchar(25),
+    c_c_data varchar(50)
+);
+
+desc client_contact_mod_table;
+
+-- --------------------------------------------------------------------------------
+-- candidate table  
+create table candidate_table
+(
+	cand_id varchar(6) primary key,
+    cand_first_name varchar(35),
+    cand_middle_name varchar(35),
+    cand_last_name varchar(35),
+    cand_father_name varchar(35),
+    cand_marital_status varchar(4),
+    cand_birthdate date,
+    cand_birthplace varchar(35),
+    cand_religion varchar(35),
+    cand_salary_expected decimal(10,2),
+    cand_email varchar(50),
+    cand_job_experience decimal(8,2)
+    );
+    
+    desc candidate_table;
+
+create table candidate_address_table
+(
+	cand_a_id varchar(6) primary key,
+    cand_id varchar(6),
+    foreign key (cand_id) references candidate_table (cand_id),
+    cand_a_1 varchar(50),
+    cand_a_2 varchar(50),
+	cand_city varchar(35),
+    cand_state varchar(35),
+    cand_country varchar(25),
+    cand_zip int(25),
+	cand_telephone_no int(25),
+	cand_mobile_no int(25)
+);
+
+desc candidate_address_table;
+
+
+create table candidate_qualification_table
+(
+	qual_id varchar(6) primary key,
+    cand_id varchar(6),
+    qual_type varchar(15),
+    foreign key (cand_id) references candidate_table (cand_id),  
+    exam_name varchar(50),
+    institution_name varchar(50),
+    board_name varchar(50),
+    year_of_passing int(10),
+    exam_class_no varchar(20),
+    remark varchar(255)
+);
+
+desc candidate_qualification_table;

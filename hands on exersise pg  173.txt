@@ -1,0 +1,67 @@
+hands on exersise pg no : 173
+
+
+-- displaying tables --
+
+
+
+-- query : a --
+
+show tables;
+
+-- query : b --
+
+show tables from human_resource_management;
+
+
+
+-- displaying table structures --
+
+
+
+-- query : a --
+  
+  desc candidate_table;
+
+-- query : b --
+  
+  describe client_address_table;
+  
+  
+  
+  -- displaying table status --
+
+
+
+-- query : a --
+  
+  show table status;
+  
+  
+  
+  -- displaying table properties --
+
+
+-- query : a --
+  
+  show table status like 'client_info';
+
+-- query : b --
+  
+  show table status like 'candidate_table';
+  
+  
+  
+  -- displaying create table statements--
+
+
+-- query : a --
+  
+  show create table candidate_address_table;
+
+-- query : b --
+  
+  show create table client_contact_mod_table;
+  
+  
+  

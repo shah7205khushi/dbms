@@ -1,0 +1,384 @@
+create database db12;
+use db12;
+
+
+create table companymaster
+(
+company_id varchar(6) primary key,
+
+c_name varchar(25),
+address varchar(75),
+contactperson varchar(25),
+paymentTerms varchar(25)
+);
+desc companymaster;
+
+
+
+
+
+create table categorymaster 
+(
+ category_id varchar(6) primary key,
+ 
+ category_name varchar(25)
+ );
+desc  categorymaster;
+ 
+ 
+
+insert into companymaster(company_id,c_name,address,contactperson,paymentTerms)
+values('CMP001','samsung','B1,Near onida house,phase ,isanpur','Neha Deshmukh','cash or cheque');
+
+
+insert into companymaster(company_id,c_name,address,contactperson,paymentTerms)
+values('CMP002','air','A-33,Near farm villa,phase ,S.G Highway','Isha Thakkar','cash or cheque');
+
+
+insert into companymaster(company_id,c_name,address,contactperson,paymentTerms)
+values('CMP003','Godrej','s1,Near Opera House,SandHurst Bridge,Charni Road','Rahul Shah','100% Advance Payment');
+
+
+insert into companymaster(company_id,c_name,address,contactperson,paymentTerms)
+values('CMP004','Sony','A-3,sitaram chambers ,near MIG club','john candy','Only Cheque');
+select * from companymaster;
+
+
+
+insert into categorymaster(category_id,category_name)
+values ('CAT001','refrigerator');
+
+insert into categorymaster(category_id,category_name)
+values ('CAT002','washing machine');
+
+insert into categorymaster(category_id,category_name)
+values ('CAT003','A.C');
+
+
+insert into categorymaster(category_id,category_name)
+values ('CAT004','T.V');
+
+
+insert into categorymaster(category_id,category_name)
+values ('CAT005','cameras');
+
+select * from categorymaster;
+
+
+
+create table schememaster
+(
+scheme_id varchar(6) primary key,
+
+description varchar(25)
+);
+
+desc schememaster;
+
+
+
+create table customermaster
+(
+customer_id varchar(6) primary key,
+
+cus_name  varchar(25),
+company_name varchar(25),
+address varchar(100),
+telephone int(20)
+);
+desc customermaster;
+
+
+
+
+create table employeemaster
+(
+employee_id varchar(6) primary key,
+
+name varchar(25),
+designation varchar(25),
+manager_id varchar(6) unique key not null
+);
+desc employeemaster;
+
+
+
+
+create table productmaster
+(
+product_id varchar(6) primary key,
+
+name varchar(25),
+company_id varchar(6) ,
+category_id varchar(6) ,
+scheme_id varchar(6),
+foreign key (company_id) references companymaster (company_id),
+foreign key (category_id) references categorymaster (category_id),
+foreign key (scheme_id) references schememaster (scheme_id),
+cost decimal(7,2),
+QtyInHand int(3)
+);
+desc productmaster;
+
+
+
+
+create table transactionmaster
+(
+transaction_id varchar(6) primary key,
+customer_id varchar(6), 
+employee_id varchar(6),
+foreign key (customer_id) references customermaster (customer_id),
+foreign key (employee_id) references employeemaster (employee_id),
+transation_date date,
+delivery_date date,
+amount decimal(7,2)  
+);
+
+desc transactionmaster;
+
+
+
+
+
+
+create table transactiondetail
+(
+transaction_id varchar(6) primary key,
+foreign key (product_id) references productmaster (product_id),
+foreign key (transaction_id) references transactionmaster (transaction_id),
+product_id varchar(6),
+product_cost decimal (7,2)
+);
+
+desc transactiondetail;
+
+
+insert into schememaster(scheme_id,description)
+values('sch001','buy 1 get 1 free');
+
+insert into schememaster(scheme_id,description)
+values('sch002','50% discount');
+
+insert into schememaster(scheme_id,description)
+values('sch003','20% discount');
+
+insert into schememaster(scheme_id,description)
+values('sch004','1 bowl free');
+
+insert into schememaster(scheme_id,description)
+values('sch005',' 2 glasses free');
+
+select* from schememaster;
+
+
+insert into employeemaster(employee_id,name,designation,manager_id)
+values('EMP001','yash','salesman','M001');
+
+insert into employeemaster(employee_id,name,designation,manager_id)
+values('EMP002','Ansh','shopkeeper','M002');
+
+insert into employeemaster(employee_id,name,designation,manager_id)
+values('EMP003','Riya','accountant','M003');
+
+insert into employeemaster(employee_id,name,designation,manager_id)
+values('EMP004','krisa','Manager','M004');
+
+insert into employeemaster(employee_id,name,designation,manager_id)
+values('EMP005','Aagam','bussinessman','M005');
+
+
+insert into employeemaster(employee_id,name,designation,manager_id)
+values('EMP006','Rohan','Doctor','M006');
+
+insert into employeemaster(employee_id,name,designation,manager_id)
+values('EMP007','Nisha','Managing Diractor','M007');
+
+insert into employeemaster(employee_id,name,designation,manager_id)
+values('EMP008','Karan','receptionist','M008');
+
+select * from employeemaster;
+
+
+
+
+
+insert into transactionmaster(transaction_id,customer_id,employee_id,transation_date ,delivery_date,amount)
+values('TRN001','CUS001','EMP006','2003-10-06','2003-10-10',38000);
+
+insert into transactionmaster(transaction_id,customer_id,employee_id,transation_date ,delivery_date,amount)
+values('TRN002','CUS002','EMP004','2004/05/21','2005/06/01',47000);
+
+insert into transactionmaster(transaction_id,customer_id,employee_id,transation_date ,delivery_date,amount)
+values('TRN003','CUS003','EMP004','2004/12/31','2005/01/02',17000);
+
+insert into transactionmaster(transaction_id,customer_id,employee_id,transation_date ,delivery_date,amount)
+values('TRN004','CUS003','EMP005','2005/02/10','2005/02/13',34000);
+
+insert into transactionmaster(transaction_id,customer_id,employee_id,transation_date ,delivery_date,amount)
+values('TRN005','CUS005','EMP006','2005/02/10','2005/02/11',15000);
+
+insert into transactionmaster(transaction_id,customer_id,employee_id,transation_date ,delivery_date,amount)
+values('TRN006','CUS006','EMP005','2005/03/02','2005/03/10',16699);
+
+select * from transactionmaster;
+
+
+
+
+
+insert into productmaster(product_id,name,company_id,category_id,scheme_id,cost,QtyInHand)
+values('PRD001','super star','CMP001','CAT001','SCH003',15000,22);
+
+insert into productmaster(product_id,name,company_id,category_id,scheme_id,cost,QtyInHand)
+values('PRD002','ICS','CMP001','CAT001','SCH001',12000,18);
+
+
+insert into productmaster(product_id,name,company_id,category_id,scheme_id,cost,QtyInHand)
+values('PRD003','XBR','CMP002','CAT002','SCH002',15000,22);
+
+
+insert into productmaster(product_id,name,company_id,category_id,scheme_id,cost,QtyInHand)
+values('PRD004','Turbo power','CMP003','CAT004','SCH003',18000,21);
+
+
+insert into productmaster(product_id,name,company_id,category_id,scheme_id,cost,QtyInHand)
+values('PRD005','champion','CMP003','CAT003','SCH003',19000,20);
+
+
+insert into productmaster(product_id,name,company_id,category_id,scheme_id,cost,QtyInHand)
+values('PRD006','Mavica','CMP004','CAT004','SCH004',11000,25);
+
+
+select * from productmaster;
+
+
+insert into customermaster(customer_id,cus_name,address,telephone)
+values('CUS001','smita','nalasopara','28888888');
+
+
+insert into customermaster(customer_id,company_name,address,telephone)
+values('CUS002','silicon chip tech','vileparle','28856888');
+
+
+insert into customermaster(customer_id,cus_name,address,telephone)
+values('CUS003','chaya','thane','28888748');
+
+
+insert into customermaster(customer_id,cus_name,address,telephone)
+values('CUS004','anil','vileparle','28888234');
+
+insert into customermaster(customer_id,cus_name,address,telephone)
+values('CUS005','sanjyot','Vashi','45788888');
+
+
+insert into customermaster(customer_id,cus_name,address,telephone)
+values('CUS006','vaishali shah','shivaji park','28882834');
+
+
+insert into customermaster(customer_id,company_name,address,telephone)
+values('CUS007','pure Hsg.soc','kurla','28284988');
+
+
+insert into customermaster(customer_id,company_name,address,telephone)
+values('CUS008','Uttam stores','Ghatkopar','28888532');
+
+
+insert into customermaster(customer_id,company_name,address,telephone)
+values('CUS009','sun pvt Ltd','lower parel','28654888');
+
+
+insert into customermaster(customer_id,cus_name,address,telephone)
+values('CUS010','manisha','bandra','98788888');
+
+
+insert into customermaster(customer_id,company_name,address,telephone)
+values('CUS011','Ghar karobar','Bandara','28885478'); 
+
+
+insert into customermaster(customer_id,cus_name,address,telephone)
+values('CUS012','Ivan','vileparle','93548888');
+
+
+select * from customermaster;
+
+insert into transactiondetail(transaction_id,product_id,product_cost)
+values('TRN001','PRD001',12670);
+
+insert into transactiondetail(transaction_id,product_id,product_cost)
+values('TRN002','PRD006',6670);
+
+insert into transactiondetail(transaction_id,product_id,product_cost)
+values('TRN003','PRD004',30670);
+
+insert into transactiondetail(transaction_id,product_id,product_cost)
+values('TRN004','PRD003',9200);
+
+insert into transactiondetail(transaction_id,product_id,product_cost)
+values('TRN005','PRD005',14500);
+
+insert into transactiondetail(transaction_id,product_id,product_cost)
+values('TRN006','PRD002',3000);
+
+select * from transactiondetail;
+
+
+
+
+select distinct * from transactiondetail;
+
+select * from customermaster
+order by cus_name;
+
+
+select * from employeemaster
+order by name desc
+limit 3;
+
+select * from employeemaster
+order by name 
+limit 3;
+
+select * from employeemaster
+order by name;
+
+select * from employeemaster
+order by name desc;
+
+select * from customermaster
+limit 7,5;
+
+update  employeemaster
+set name="khushi"
+where employee_id='emp001';
+
+select * from employeemaster;
+
+ALTER table customermaster
+ADD (city varchar(15));
+
+ALTER table customermaster
+ADD state varchar(15) After address;
+
+ALTER table customermaster
+ADD country varchar(15) first;
+
+ALTER table customermaster
+drop column city;
+
+ALTER table customermaster
+modify state varchar(50) ;
+
+ALTER table customermaster
+change  state c_state varchar(50);
+
+desc customermaster;
+
+alter table productmaster rename product;
+show tables;
+
+rename table customermaster to customer;
+show tables;
+
+show variables;
+

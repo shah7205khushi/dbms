@@ -1,0 +1,43 @@
+/*view*/
+
+
+create view khushi as
+select * from companymaster;
+
+select * from khushi;
+
+
+create view customerbrief as
+select  customer_id,cus_name,address from customer;
+
+select * from customerbrief;
+
+create view myproduct as
+select product_id "pid",name"pname",cost"pcost" from product;
+
+select * from myproduct;
+
+create view employees as select * from employeemaster;
+insert into employees values ('emp009','khushi shah','manager','emp002');
+
+select * from employees;
+
+select * from employeemaster;
+
+update employees
+set designation='guard'
+where employee_id="EMP004";
+
+delete from employees where employee_id="EMP009";
+
+create view emptran as 
+select e.employee_id,e.name,t.transation_date,t.amount
+from employeemaster e,transactionmaster t
+where e. employee_id=t. employee_id;
+
+select * from emptran;
+
+update emptran set amount=10000
+where employee_id="EMP006";
+
+

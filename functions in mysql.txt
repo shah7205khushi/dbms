@@ -1,0 +1,139 @@
+/* FUNCTION IN SQL */
+
+
+/* AGGREGATE FUNCTION */
+
+select avg(cost) from  product;
+
+select min(cost) from product;
+
+select max(cost) from product ;
+
+select count(name) "no of products" from product;
+
+select count(distinct product_id)from transactiondetail;
+
+select sum(cost) from product;
+
+select * from product;
+
+/* NUMERIC FUNCTION */
+
+select abs(-65);
+
+select power(7,2);
+
+select round(11.34,0);
+
+select round(11.34,1);
+
+select round(11.34,2);
+
+select sqrt(4);
+
+select sqrt(100);
+
+select exp(2);
+
+select extract(year from date  '2006-07-22')"year";
+
+select extract(month from now())"month";
+
+select now();
+
+select greatest(5,10,15);
+
+select least(7,8,9);
+
+select mod(17,2);
+/* mod returns the remainder */
+
+select truncate(25.7654,3);
+/* it is used for decimal point */
+
+select floor(13.7);
+/* it returns the integer values that is equal or less than number */
+
+select ceil(13.7);
+/* it returns the integer values that is equal or greater than number */
+
+select rand();
+/* returns random floating values from 0 to 1 */
+
+select rand(5);
+
+select pi();
+
+select radians(30);
+/*return the argument n,converted from degrees to randians*/
+
+select degrees(pi());
+/* return the argument n,converted from  randians  to degrees */ 
+
+
+/* STRING FUNCTION */
+
+select lower("KHUSHI");
+
+select upper("kavya");
+
+select c_name, ucase(c_name), lcase(c_name) from companymaster;
+
+select substring('shahkhushi',5,6);
+
+select ascii('a');
+
+select instr('shahkhushi','khushi');
+
+select left('airtel',3);
+
+select mid('aeroplane',5,4);
+
+select RIGHT('gold',3);
+
+select length("khushi shah");
+
+select ltrim('      jil');
+
+select rtrim('jil       ');
+
+select trim('  kavya  ');
+
+select replace('i like lotus','lotus','rose');
+
+select bit_length('khushi');
+
+select char_length('jil');
+
+select concat(c_name,':',address) from companymaster;
+
+select reverse('jil');
+
+select repeat('jalpa',3);
+
+/* DATA FUNCTIONS */
+
+select now();
+
+select curdate();
+
+select curdate()+0;
+
+select curtime();
+
+select curtime()+0;
+
+select  current_date,date_add(current_date,interval 2 months);
+
+select current_date,adddate(current_date,6);
+
+/*page 301 to 310 skipped*/
+
+select user();
+
+select database();
+
+
+
+
+
