@@ -1,0 +1,50 @@
+7) WAF which accepts the empno and returns the experience in years. Handle the error if
+empno does not exist.
+EMP(Empno, Empname, DOJ);
+
+
+CREATE TABLE EM (
+    Empno INT PRIMARY KEY,
+    Empname VARCHAR(255),
+    DOJ DATE
+);
+
+INSERT INTO EM (Empno, Empname, DOJ) VALUES
+(101, 'John Doe', '2020-01-15'),
+(102, 'Jane Smith', '2018-05-20'),
+(103, 'Bob Johnson', '2019-08-10'),
+(104, 'Alice Williams', '2022-03-03');
+
+SELECT GetExperience(101); 
+-- 3 years exp
+
+
+
+---------
+
+cREATE DEFINER=`root`@`localhost` FUNCTION `GetExperience`(emp_number INT) RETURNS int
+    DETERMINISTIC
+BEGIN
+    DECLARE emp_start_date DATE;
+    DECLARE currentdate DATE;
+    DECLARE experience_years INT;
+
+    SELECT DOJ INTO emp_start_date
+    FROM EM
+    WHERE Empno = emp_number;
+
+    IF emp_start_date IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Employee does not exist';
+    ELSE
+        SET currentdate = CURDATE();
+        SET experience_years = YEAR(currentdate) - YEAR(emp_start_date);
+
+        -- Adjust for cases where the employee hasn't had their anniversary yet
+        IF DATE_FORMAT(currentdate, '%m-%d') < DATE_FORMAT(emp_start_date, '%m-%d') THEN
+            SET experience_years = experience_years - 1;
+        END IF;
+    END IF;
+
+    RETURN experience_years;
+END

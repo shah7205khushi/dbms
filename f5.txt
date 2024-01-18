@@ -1,0 +1,18 @@
+-- 5) WAF which accepts one no and returns that no+100. Use INOUT mode.
+
+
+SET @number = 42;
+SELECT Addn(@number) AS Result;
+
+
+-- 142
+
+
+--------------------------------------
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `Addn`( input_number INT) RETURNS int
+    DETERMINISTIC
+BEGIN
+    SET input_number = input_number + 100;
+    RETURN input_number;
+END

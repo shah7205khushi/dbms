@@ -1,0 +1,60 @@
+/*
+
+6) WAF which accepts the empno. If salary<10000 than give raise by 30%.
+If salary<20000 and salary>=10000 than give raise by 20%. If salary>20000 than
+give raise by 10%. Handle the error if any.*/
+
+
+CREATE TABLE EMPss (
+    Empno INT PRIMARY KEY,
+    Deptno INT,
+    Salary DECIMAL(10, 2)
+);
+
+INSERT INTO EMPss (Empno, Deptno, Salary) VALUES
+(1, 10, 5000.00),
+(2, 20, 60000.00),
+(3, 10, 5500.00),
+(4, 20, 17000.00),
+(5, 30, 18000.00);
+
+SELECT GiveRaise(1); 
+-- 6500.00(30% raise)
+
+SELECT GiveRaise(4); 
+-- 20400.00(20% raise)
+
+SELECT GiveRaise(2);
+-- 66000.00(10% raise)
+
+SELECT GiveRaise(8);
+/*0	51	09:46:10	SELECT GiveRaise(8)
+ LIMIT 0, 1000	Error Code: 1644. Error: Employee does not exist	0.000 sec*/
+ 
+ -----------------------
+
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `GiveRaise`(emp_number INT) RETURNS decimal(10,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE emp_salary DECIMAL(10, 2);
+
+    SELECT Salary INTO emp_salary
+    FROM EMPss
+    WHERE Empno = emp_number;
+
+    IF emp_salary IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Employee does not exist';
+    ELSE
+        IF emp_salary < 10000 THEN
+            SET emp_salary = emp_salary * 1.30; -- 30% raise
+        ELSEIF emp_salary >= 10000 AND emp_salary < 20000 THEN
+            SET emp_salary = emp_salary * 1.20; -- 20% raise
+        ELSE
+            SET emp_salary = emp_salary * 1.10; -- 10% raise
+        END IF;
+    END IF;
+
+    RETURN emp_salary;
+END

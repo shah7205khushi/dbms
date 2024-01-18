@@ -1,0 +1,22 @@
+-- 4) Write a function to display whether the inputed employee no is exists or not.
+
+SELECT IsEmployeeExist(5);
+-- 1 (if it returns 1 than employee exists)
+
+SELECT IsEmployeeExist(8);
+-- 0 (if it returns 0 than employee does not exist)
+
+-------------------------------------------------------------------------------------------------------
+
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `IsEmployeeExist`(emp_number INT) RETURNS tinyint(1)
+    DETERMINISTIC
+BEGIN
+    DECLARE emp_count INT;
+
+    SELECT COUNT(*) INTO emp_count
+    FROM EMPs
+    WHERE Empno = emp_number;
+
+    RETURN emp_count > 0;
+END

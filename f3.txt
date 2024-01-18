@@ -1,0 +1,46 @@
+CREATE TABLE EMPs (
+    Empno INT PRIMARY KEY,
+    Deptno INT,
+    Salary DECIMAL(10, 2)
+);
+
+INSERT INTO EMPs (Empno, Deptno, Salary) VALUES
+(1, 10, 50000.00),
+(2, 20, 60000.00),
+(3, 10, 55000.00),
+(4, 20, 70000.00),
+(5, 30, 80000.00);
+
+
+SELECT GetMaxSalaryByDept(10); -- Replace 10 with the actual department number
+
+-- 55000.00
+
+SELECT GetMaxSalaryByDept(50); 
+
+/*
+0	25	08:16:54	SELECT GetMaxSalaryByDept(50)
+ LIMIT 0, 1000	Error Code: 1644. Error: Department does not exist	0.000 sec*/
+
+----------------------------------------------------------------------------------------------------
+
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `GetMaxSalaryByDept`(department_number INT) RETURNS decimal(10,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE max_salary DECIMAL(10, 2);
+
+    SELECT MAX(salary) INTO max_salary
+    FROM EMPs
+    WHERE deptno = department_number;
+
+    IF max_salary IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Department does not exist';
+    ELSEIF ROW_COUNT() > 1 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Multiple rows returned for the department';
+    END IF;
+
+    RETURN max_salary;
+END

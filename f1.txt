@@ -1,0 +1,21 @@
+-- functions
+
+-- 1)  WAF which accepts the name from user and returns the length of that name
+
+SELECT GetLengthOfName('khushi shah');
+
+-- length = 11
+
+
+
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `GetLengthOfName`(input_name VARCHAR(255)) RETURNS int
+    DETERMINISTIC
+BEGIN
+    DECLARE name_length INT;
+    
+    SET name_length = LENGTH(input_name);
+
+    RETURN name_length;
+END
+
